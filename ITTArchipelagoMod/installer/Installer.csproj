@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>ItTakesTwo-Archipelago-Installer</AssemblyName>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <!-- Single exe, no .NET install needed. -->
+    <PublishAot>true</PublishAot>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <OptimizationPreference>Size</OptimizationPreference>
+    <!-- Asks for admin rights. -->
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The mod files to install. -->
+    <EmbeddedResource Include="build/payload.zip" LogicalName="payload.zip" />
+  </ItemGroup>
+
+</Project>
