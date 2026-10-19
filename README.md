@@ -1,4 +1,5 @@
-# It Takes Two Setup Guide
+# It Takes Two AP
+Archipelago client implimentation for It Takes Two.
 
 ## Requirements
 
