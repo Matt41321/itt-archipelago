@@ -6,7 +6,7 @@
 - [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases) 0.6.7 or newer
 - From this mod's release:
   - `ItTakesTwo-Archipelago-Installer.exe`
-  - `itt.apworld`
+  - `it_takes_two.apworld`
 
 ## Setup Guide
 
@@ -22,7 +22,7 @@ press `U`.
 
 ### 2. Install the apworld
 
-Double-click `itt.apworld` to add it to Archipelago, or copy it into the `custom_worlds` folder of your Archipelago install.
+Double-click `it_takes_two.apworld` to add it to Archipelago, or copy it into the `custom_worlds` folder of your Archipelago install.
 
 ### 3. Connecting
 
