@@ -25,7 +25,10 @@ press `U`.
 
 Double-click `it_takes_two.apworld` to add it to Archipelago, or copy it into the `custom_worlds` folder of your Archipelago install.
 
-### 3. Connecting
+## 3. Generating
+- To generate a game, follow [the official instructions.](https://archipelago.gg/tutorial/Archipelago/setup/en#generating-a-game)
+
+### 4. Connecting
 
 1. Open the Archipelago Launcher and click **It Takes Two Client**.
 2. Enter the server address (for example `archipelago.gg:12345`) and connect with your slot name.
