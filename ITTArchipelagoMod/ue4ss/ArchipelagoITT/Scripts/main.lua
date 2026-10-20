@@ -55,6 +55,7 @@ local Abilities = {
 
 local FinalChapter = "A Grand Finale"
 local GoalLine = "!goal" -- must match GOAL_LINE in client.py
+local ReachedPrefix = "reached:" -- must match REACHED_PREFIX in client.py
 
 local function Log(Msg)
     print("[Archipelago] " .. Msg .. "\n")
@@ -311,6 +312,8 @@ local function OnEnterChapter(State, Chapter, Player, Progress)
         end
     elseif LastChapter and NextStoryChapter[LastChapter] == Chapter.name and LastChapter ~= FinalChapter then
         SendCheck(LastChapter .. " Complete")
+        -- Played into this sub-chapter; the client unlocks it if Unlock Reached Sub-Chapters is on.
+        SendCheck(ReachedPrefix .. Chapter.name)
     end
     PickerChapter = nil
     LastChapter = Chapter.name
