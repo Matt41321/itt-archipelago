@@ -27,6 +27,7 @@ LAST_CHAPTER_FILE = BRIDGE_DIR / "last_chapter.txt"
 HEARTBEAT_FILE = BRIDGE_DIR / "heartbeat.txt"
 GOAL_LINE = "!goal"
 CHECKPOINT_PREFIX = "cp:"
+REACHED_PREFIX = "reached:"
 POLL_SECONDS = 0.5
 
 
@@ -50,6 +51,8 @@ class ItTakesTwoContext(CommonContext):
         self.goal: str | None = None  # "default" or "minigames"
         self.goal_required = 0
         self.goal_progress_logged = 0
+        self.unlock_reached = False
+        self.reached_chapters: set[str] = set()  # sub-chapters played into, from checks.txt
         self.room_seed_name: str | None = None
         BRIDGE_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -69,8 +72,10 @@ class ItTakesTwoContext(CommonContext):
             required_key = "minigames_required" if self.goal == "minigames" else "pages_required"
             self.goal_required = slot_data.get(required_key, 0)
             self.goal_progress_logged = 0
+            self.unlock_reached = slot_data.get("unlock_reached_sub_chapters", False)
             # Re-read checks.txt from the start.
             self.checks_read = 0
+            self.reached_chapters = set()
             self.goal_sent = False
             self.reset_bridge_for_new_seed()
             self.write_state()
@@ -104,6 +109,8 @@ class ItTakesTwoContext(CommonContext):
         """Item names the game has unlocked, including the finale once the goal is met."""
         available = {self.item_names.lookup_in_game(item.item, GAME_NAME) for item in self.items_received}
         available |= set(MOVEMENT_ITEMS) - self.seed_movement
+        if self.unlock_reached:
+            available |= self.reached_chapters
         if self.goal is not None:
             _, progress = self.goal_progress()
             available.discard(FINAL_CHAPTER)
@@ -139,9 +146,17 @@ class ItTakesTwoContext(CommonContext):
         new_lines, self.checks_read = lines[self.checks_read:], len(lines)
 
         locations = []
+        reached_before = len(self.reached_chapters)
         for line in new_lines:
             line = line.strip()
-            if line == GOAL_LINE:
+            if line.startswith(REACHED_PREFIX):
+                # Played into this sub-chapter; only unlocks it with Unlock Reached Sub-Chapters on.
+                name = line.removeprefix(REACHED_PREFIX)
+                if name in CHAPTER_ITEMS and name != FINAL_CHAPTER and name not in self.reached_chapters:
+                    self.reached_chapters.add(name)
+                    if self.unlock_reached:
+                        logger.info(f"Reached {name}: it's unlocked in chapter select")
+            elif line == GOAL_LINE:
                 if not self.goal_sent:
                     self.goal_sent = True
                     await self.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
@@ -156,6 +171,9 @@ class ItTakesTwoContext(CommonContext):
                 locations.append(LOCATION_NAME_TO_ID[line])
             elif line:
                 logger.warning(f"Game reported unknown location: {line}")
+
+        if self.unlock_reached and len(self.reached_chapters) != reached_before:
+            self.write_state()
 
         new_locations = [loc for loc in locations if loc not in self.checked_locations]
         if new_locations:

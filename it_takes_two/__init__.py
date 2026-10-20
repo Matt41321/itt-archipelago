@@ -13,7 +13,7 @@ from .locations import (CHECKPOINT_LOCATIONS, COMPLETION_LOCATIONS, DISCOVERY_LO
                         LOCATION_GROUPS, LOCATION_NAME_TO_ID, MINIGAME_EVENT, MINIGAMES, STORY_CHAPTERS, VICTORY_EVENT,
                         ItTakesTwoLocation, completion_location_name, discovery_location_name)
 from .logic_data import NODES
-from .options import Goal, ItTakesTwoOptions
+from .options import Goal, ItTakesTwoOptions, StartingMovement, StartingSubChapters
 from .rules import ENTRANCES, FINALE_REQUIREMENTS, node_of, reachable_nodes
 
 def launch_client(*args: str) -> None:
@@ -38,7 +38,7 @@ class ItTakesTwoWorld(World):
     item_name_groups = ITEM_GROUPS
     location_name_groups = LOCATION_GROUPS
 
-    start_chapter: str
+    start_chapters: list[str]
     starting_movement: tuple[str, ...]
     page_count: int
     pages_required: int
@@ -48,11 +48,21 @@ class ItTakesTwoWorld(World):
         return ItTakesTwoItem(name, data.classification, data.id, self.player)
 
     def generate_early(self) -> None:
-        # Start with a random sub-chapter
-        self.starting_movement = BASIC_MOVEMENT if self.options.start_with_basic_movement else ()
-        candidates = [chapter.name for chapter in STORY_CHAPTERS if chapter.name != FINAL_CHAPTER
-                      and completion_location_name(chapter) in reachable_nodes({*self.starting_movement, chapter.name})]
-        self.start_chapter = self.random.choice(candidates)
+        self.starting_movement = {StartingMovement.option_none: (),
+                                  StartingMovement.option_basic_movement: BASIC_MOVEMENT,
+                                  StartingMovement.option_sprint: ("Sprint",)}[self.options.starting_movement.value]
+        if self.options.starting_sub_chapters == StartingSubChapters.option_first_of_each_chapter:
+            # Start with the first sub-chapter of every chapter
+            firsts: dict[str, str] = {}
+            for chapter in STORY_CHAPTERS:
+                firsts.setdefault(chapter.group, chapter.name)
+            self.start_chapters = list(firsts.values())
+        else:
+            # Start with a random sub-chapter
+            candidates = [chapter.name for chapter in STORY_CHAPTERS if chapter.name != FINAL_CHAPTER
+                          and completion_location_name(chapter) in reachable_nodes({*self.starting_movement,
+                                                                                    chapter.name})]
+            self.start_chapters = [self.random.choice(candidates)]
 
         if self.options.goal == Goal.option_minigames:
             self.page_count = self.pages_required = 0
@@ -72,7 +82,7 @@ class ItTakesTwoWorld(World):
     def pool_item_names(self) -> list[str]:
         """Every item that goes in the pool apart from Pages and filler."""
         return [name for name in [*CHAPTER_ITEMS, *MOVEMENT_ITEMS, *ABILITY_ITEMS]
-                if name not in (self.start_chapter, FINAL_CHAPTER) and name not in self.starting_movement]
+                if name not in (*self.start_chapters, FINAL_CHAPTER) and name not in self.starting_movement]
 
     def create_regions(self) -> None:
         menu = Region("Menu", self.player, self.multiworld)
@@ -127,7 +137,8 @@ class ItTakesTwoWorld(World):
         return lambda state: any(state.has_all(needed, self.player) for needed in combinations)
 
     def create_items(self) -> None:
-        self.multiworld.push_precollected(self.create_item(self.start_chapter))
+        for name in self.start_chapters:
+            self.multiworld.push_precollected(self.create_item(name))
         for name in self.starting_movement:
             self.multiworld.push_precollected(self.create_item(name))
         pool = [self.create_item(name) for name in self.pool_item_names()]
@@ -145,9 +156,10 @@ class ItTakesTwoWorld(World):
 
     def fill_slot_data(self) -> dict[str, Any]:
         return {
-            "start_chapter": self.start_chapter,
+            "start_chapters": self.start_chapters,
+            "unlock_reached_sub_chapters": bool(self.options.unlock_reached_sub_chapters),
             "checkpoint_sanity": bool(self.options.checkpoint_sanity),
-            "start_with_basic_movement": bool(self.options.start_with_basic_movement),
+            "starting_movement": self.options.starting_movement.current_key,
             "goal": self.options.goal.current_key,
             "page_count": self.page_count,
             "pages_required": self.pages_required,

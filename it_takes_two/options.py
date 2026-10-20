@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from Options import Choice, DefaultOnToggle, PerGameCommonOptions, Range, Toggle
+from Options import Choice, PerGameCommonOptions, Range, Toggle
 
 
 class Goal(Choice):
@@ -37,9 +37,32 @@ class MinigamesRequired(Range):
     default = 15
 
 
-class StartWithBasicMovement(DefaultOnToggle):
-    """Start with Double Jump and Dash."""
-    display_name = "Start With Basic Movement"
+class StartingMovement(Choice):
+    """Which movement you start with.
+    None: no movement.
+    Basic Movement: Double Jump and Dash.
+    Sprint: just Sprint."""
+    display_name = "Starting Movement"
+    option_none = 0
+    option_basic_movement = 1
+    option_sprint = 2
+    default = 1
+
+
+class StartingSubChapters(Choice):
+    """Which sub-chapters you start with.
+    Random Sub-Chapter: one random sub-chapter you can complete with your starting movement.
+    First Of Each Chapter: the first sub-chapter of every chapter."""
+    display_name = "Starting Sub-Chapters"
+    option_random_sub_chapter = 0
+    option_first_of_each_chapter = 1
+    default = 0
+
+
+class UnlockReachedSubChapters(Toggle):
+    """Playing through a sub-chapter into the next one unlocks the next one in chapter select, even if you haven't
+    been sent it. For example, playing through Biting the Dust into The Depths lets you teleport to The Depths."""
+    display_name = "Unlock Reached Sub-Chapters"
 
 
 class CheckpointSanity(Toggle):
@@ -53,5 +76,7 @@ class ItTakesTwoOptions(PerGameCommonOptions):
     page_count: PageCount
     page_percentage: PagePercentage
     minigames_required: MinigamesRequired
-    start_with_basic_movement: StartWithBasicMovement
+    starting_movement: StartingMovement
+    starting_sub_chapters: StartingSubChapters
+    unlock_reached_sub_chapters: UnlockReachedSubChapters
     checkpoint_sanity: CheckpointSanity
