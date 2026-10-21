@@ -1,0 +1,40 @@
+# ArchipelagoITT patch for Nuts/Script/Peanuts/Audio/HazeAudioManager/HazeAudioManager.as
+# vanilla-sha256: 25806059ba467e119d6616109ebdb2287ee91e738ee92039faed4aeec3543b82
+# patched-sha256: 243c26d9f29cc1939c93c8633319540a3db84ce74478181123bcf759c1ed34a7
+# patched-ends-with-newline: no
+--- a/Peanuts/Audio/HazeAudioManager/HazeAudioManager.as
++++ b/Peanuts/Audio/HazeAudioManager/HazeAudioManager.as
+@@ -21,6 +21,17 @@
+ 	FString LatestProgressPointLevel;
+ 	FString CurrentInLevel;
+ 	FString CurrentCheckpointName;
++
++	// Archipelago: progress events, read by the mod.
++	UPROPERTY()
++	TArray<FString> ArchipelagoProgressEvents;
++
++	// Archipelago: lets the mod check this patch is loaded.
++	UFUNCTION()
++	bool IsArchipelagoProgressTracked() const
++	{
++		return true;
++	}
+ 
+ 	FString CurrentLevelGroup;
+ 	FString CurrentSubLevel;
+@@ -528,6 +539,7 @@
+ 	UFUNCTION(BlueprintOverride)
+ 	void OnActivatedProgressPoint(FString InLevel, FString CheckpointName)
+ 	{
++		ArchipelagoProgressEvents.Add("activated|" + InLevel + "|" + CheckpointName);
+ 		LatestProgressPointLevel = InLevel;
+ 		bQueueMusicManagerLoadTransition = true;
+ 	}
+@@ -535,6 +547,7 @@
+ 	UFUNCTION(BlueprintOverride)
+ 	void OnProgressionPointUpdate(FString InLevel, FString CheckpointName, bool bFromSave)
+ 	{
++		ArchipelagoProgressEvents.Add((bFromSave ? "saved|" : "reached|") + InLevel + "|" + CheckpointName);
+ 		CurrentInLevel = InLevel;
+ 		CurrentCheckpointName = CheckpointName;
+ 		UpdateLevelProgressionState();

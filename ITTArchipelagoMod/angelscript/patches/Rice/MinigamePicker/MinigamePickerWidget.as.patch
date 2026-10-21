@@ -1,0 +1,87 @@
+# ArchipelagoITT patch for Nuts/Script/Rice/MinigamePicker/MinigamePickerWidget.as
+# vanilla-sha256: 77054acef60323718b104fdd2f07f169ce79a70207c9fff9d0f7feb101136d03
+# patched-sha256: 95d93df6ba6d84e800f5558e5e591c7a8db2d5621cd4e855a6171688662bb543
+# patched-ends-with-newline: no
+--- a/Rice/MinigamePicker/MinigamePickerWidget.as
++++ b/Rice/MinigamePicker/MinigamePickerWidget.as
+@@ -196,6 +196,11 @@
+ 	bool bHasVisibleMinigames = true;
+ 	bool bHasTickedForSound = false;
+ 
++	// Archipelago: discovered minigames bitmask, set by the mod (-1 = no session).
++	UPROPERTY()
++	int ArchipelagoDiscoveredMinigames = -1;
++	private int AppliedArchipelagoMask = -1;
++
+ 	private TArray<UMinigamePickerRow> Rows;
+ 	private UHazeChapterDatabase ChapterDB;
+ 	private int SelectedIndex = -1;
+@@ -205,6 +210,7 @@
+ 	{
+ 		ChapterDB = UHazeChapterDatabase::GetChapterDatabase();
+ 		bHasUnlockedMinigames = false;
++		AppliedArchipelagoMask = ArchipelagoDiscoveredMinigames;
+ 
+ 		SelectedIndex = -1;
+ 		for (auto Row : Rows)
+@@ -235,7 +241,8 @@
+ 			Row.WithinGameChapter = GameChapter;
+ 			Row.WithinGameChapterGroup = GameChapterGroup;
+ 			Row.bHasReachedChapter = Save::IsChapterSelectUnlocked(Chapter.ProgressPoint);
+-			Row.bIsUnlocked = Row.bHasReachedChapter && Save::IsMinigameUnlocked(Chapter.MinigameId);
++			Row.bIsUnlocked = Row.bHasReachedChapter && Save::IsMinigameUnlocked(Chapter.MinigameId)
++				&& IsArchipelagoMinigameDiscovered(TotalMinigameCount);
+ 			Row.bIsSelected = false;
+ 			Row.bClickable = CanControlSelection();
+ 			Row.Picker = this;
+@@ -284,6 +291,19 @@
+ 	void Tick(FGeometry MyGeometry, float InDeltaTime)
+ 	{
+ 		bHasTickedForSound = true;
++
++		// Archipelago: refresh locks.
++		if (ChapterDB != nullptr && ArchipelagoDiscoveredMinigames != AppliedArchipelagoMask)
++		{
++			Initialize();
++			ScrollToSelection();
++		}
++	}
++
++	UFUNCTION()
++	bool IsArchipelagoMinigameDiscovered(int MinigameIndex) const
++	{
++		return ArchipelagoDiscoveredMinigames == -1 || (ArchipelagoDiscoveredMinigames & (1 << MinigameIndex)) != 0;
+ 	}
+ 
+ 	void UpdateSelectedMinigame()
+@@ -385,7 +405,8 @@
+ 		{
+ 			auto Row = Rows[i];
+ 			if (Row.MinigameChapter.ProgressPoint.Name == Ref.Name
+-				&& Row.MinigameChapter.ProgressPoint.InLevel == Ref.InLevel)
++				&& Row.MinigameChapter.ProgressPoint.InLevel == Ref.InLevel
++				&& (Row.bIsUnlocked || ArchipelagoDiscoveredMinigames == -1))
+ 			{
+ 				Row.bIsSelected = true;
+ 				ContainerList.ScrollWidgetIntoView(Row, AnimateScroll = false, Padding = 50.f);
+@@ -397,6 +418,20 @@
+ 			}
+ 		}
+ 
++		// Archipelago: fall back to the first discovered minigame.
++		if (SelectedIndex == -1 && ArchipelagoDiscoveredMinigames != -1)
++		{
++			for (int i = 0, Count = Rows.Num(); i < Count; ++i)
++			{
++				if (Rows[i].bIsUnlocked)
++				{
++					Rows[i].bIsSelected = true;
++					SelectedIndex = i;
++					break;
++				}
++			}
++		}
++
+ 		UpdateSelectedMinigame();
+ 		if (bNotify)
+ 			OnMinigameSelected.Broadcast(Ref);

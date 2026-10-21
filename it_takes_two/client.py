@@ -154,8 +154,6 @@ class ItTakesTwoContext(CommonContext):
                 name = line.removeprefix(REACHED_PREFIX)
                 if name in CHAPTER_ITEMS and name != FINAL_CHAPTER and name not in self.reached_chapters:
                     self.reached_chapters.add(name)
-                    if self.unlock_reached:
-                        logger.info(f"Reached {name}: it's unlocked in chapter select")
             elif line == GOAL_LINE:
                 if not self.goal_sent:
                     self.goal_sent = True

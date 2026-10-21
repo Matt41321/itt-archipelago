@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from Options import Choice, PerGameCommonOptions, Range, Toggle
+from Options import Choice, OptionGroup, PerGameCommonOptions, Range, Toggle
 
 
 class Goal(Choice):
@@ -80,3 +80,23 @@ class ItTakesTwoOptions(PerGameCommonOptions):
     starting_sub_chapters: StartingSubChapters
     unlock_reached_sub_chapters: UnlockReachedSubChapters
     checkpoint_sanity: CheckpointSanity
+
+
+itt_option_groups = [
+    OptionGroup("Goal Options", [
+        Goal,
+        PageCount,
+        PagePercentage,
+        MinigamesRequired,
+    ]),
+    OptionGroup("Starting Options", [
+        StartingMovement,
+        StartingSubChapters,
+    ]),
+    OptionGroup("Sub-Chapter Options", [
+        UnlockReachedSubChapters,
+    ]),
+    OptionGroup("Extra Locations", [
+        CheckpointSanity,
+    ]),
+]

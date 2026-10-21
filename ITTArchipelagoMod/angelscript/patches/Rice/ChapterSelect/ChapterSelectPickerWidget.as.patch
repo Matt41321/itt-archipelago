@@ -1,0 +1,149 @@
+# ArchipelagoITT patch for Nuts/Script/Rice/ChapterSelect/ChapterSelectPickerWidget.as
+# vanilla-sha256: fe5f702c088ec54c3f5b53072fd8519eaf22169ad32e46303fb5bea22d7b7372
+# patched-sha256: 1294a3348c586e7ad33cff3f463cf3897a0f64bbce6ef0372e79895db0b39190
+# patched-ends-with-newline: no
+--- a/Rice/ChapterSelect/ChapterSelectPickerWidget.as
++++ b/Rice/ChapterSelect/ChapterSelectPickerWidget.as
+@@ -142,6 +142,11 @@
+ 
+ 	UPROPERTY()
+ 	FOnChapterSelectChanged OnChapterSelectChanged;
++
++	// Archipelago: unlocked chapters bitmask, set by the mod (-1 = no session).
++	UPROPERTY()
++	int64 ArchipelagoUnlockedChapters = -1;
++	private int64 AppliedArchipelagoMask = -1;
+ 
+ 	TArray<UChapterSelectSubChapterWidget> SubChapters;
+ 	int CurrentGroupIndex = -1;
+@@ -311,7 +316,8 @@
+ 				&& ChaptersInGroup[i].ProgressPoint.Name == SelectedChapter.ProgressPoint.Name
+ 			);
+ 			SubChapters[i].SetVisibility(
+-				(Save::IsChapterSelectUnlocked(SubChapters[i].Chapter.ProgressPoint)
++				((Save::IsChapterSelectUnlocked(SubChapters[i].Chapter.ProgressPoint)
++					&& IsArchipelagoChapterAllowed(SubChapters[i].Chapter))
+ 					|| SubChapters[i].bIsSelected)
+ 				? ESlateVisibility::Visible
+ 				: ESlateVisibility::Collapsed
+@@ -320,6 +326,49 @@
+ 	}
+ 
+ 	UFUNCTION()
++	bool IsArchipelagoChapterUnlocked(int ChapterIndex) const
++	{
++		return ChapterIndex < 0 || (ArchipelagoUnlockedChapters & (int64(1) << ChapterIndex)) != 0;
++	}
++
++	// Archipelago: minigames aren't locked here.
++	bool IsArchipelagoChapterAllowed(const FHazeChapter& Chapter) const
++	{
++		return Chapter.bIsMinigame
++			|| IsArchipelagoChapterUnlocked(ChapterDatabase.GetChapterIndexForProgressPoint(Chapter.ProgressPoint));
++	}
++
++	// Archipelago: first unlocked chapter in the group.
++	int FindUnlockedChapterInGroup(int GroupIndex)
++	{
++		for (const FHazeChapter& Chapter : ChapterDatabase.GetChaptersInGroup(GroupIndex))
++		{
++			if (Chapter.bIsMinigame || !Save::IsChapterSelectUnlocked(Chapter.ProgressPoint))
++				continue;
++			int ChapterIndex = ChapterDatabase.GetChapterIndexForProgressPoint(Chapter.ProgressPoint);
++			if (IsArchipelagoChapterUnlocked(ChapterIndex))
++				return ChapterIndex;
++		}
++		return -1;
++	}
++
++	// Archipelago: next group with an unlocked chapter, or -1.
++	int FindNavigableGroup(int Direction)
++	{
++		for (int GroupIndex = CurrentGroupIndex + Direction;
++			GroupIndex >= 0 && GroupIndex < ChapterDatabase.GetChapterGroupCount();
++			GroupIndex += Direction)
++		{
++			const FHazeChapterGroup& Group = ChapterDatabase.GetChapterGroupByIndex(GroupIndex);
++			if (!Save::IsChapterSelectUnlocked(Group.ProgressPoint))
++				return -1;
++			if (FindUnlockedChapterInGroup(GroupIndex) != -1)
++				return GroupIndex;
++		}
++		return -1;
++	}
++
++	UFUNCTION()
+ 	void SelectChapter(FHazeProgressPointRef ProgressPoint)
+ 	{
+ 		SelectChapterInternal(ChapterDatabase.GetChapterIndexForProgressPoint(ProgressPoint));
+@@ -330,16 +379,8 @@
+ 	{
+ 		if (!CanControlSelection())
+ 			return false;
+-		if (CurrentGroupIndex + Direction < 0)
+-			return false;
+-		if (CurrentGroupIndex + Direction >= ChapterDatabase.GetChapterGroupCount())
+-			return false;
+-
+-		const FHazeChapterGroup& Group = ChapterDatabase.GetChapterGroupByIndex(CurrentGroupIndex + Direction);
+-		if (!Save::IsChapterSelectUnlocked(Group.ProgressPoint))
+-			return false;
+-
+-		return true;
++
++		return FindNavigableGroup(Direction) != -1;
+ 	}
+ 
+ 	UFUNCTION()
+@@ -348,8 +389,7 @@
+ 		if (!CanNavigateGroup(Direction))
+ 			return;
+ 
+-		const FHazeChapterGroup& Group = ChapterDatabase.GetChapterGroupByIndex(CurrentGroupIndex + Direction);
+-		SelectChapterInternal(ChapterDatabase.GetChapterIndexForProgressPoint(Group.ProgressPoint));
++		SelectChapterInternal(FindUnlockedChapterInGroup(FindNavigableGroup(Direction)));
+ 		Game::NarrateString(GetNarrationString(true));
+ 	}
+ 
+@@ -383,6 +423,11 @@
+ 					continue;
+ 				}
+ 			}
++			else if (!IsArchipelagoChapterUnlocked(CurrentChapterIndex + OutOffset))
++			{
++				OutOffset += FMath::Sign(Direction);
++				continue;
++			}
+ 
+ 			break;
+ 		}
+@@ -421,6 +466,29 @@
+ 	void Tick(FGeometry MyGeometry, float InDeltaTime)
+ 	{
+ 		bHasTickedForSound = true;
++
++		// Archipelago: refresh locks and move off a locked chapter.
++		if (ChapterDatabase == nullptr || CurrentChapterIndex == -1)
++			return;
++		if (ArchipelagoUnlockedChapters != AppliedArchipelagoMask)
++		{
++			AppliedArchipelagoMask = ArchipelagoUnlockedChapters;
++			UpdateSelectedSubChapter();
++		}
++		if (SelectedChapter.bIsMinigame || IsArchipelagoChapterUnlocked(CurrentChapterIndex) || !CanControlSelection())
++			return;
++
++		int Target = FindUnlockedChapterInGroup(CurrentGroupIndex);
++		if (Target == -1)
++		{
++			int Group = FindNavigableGroup(-1);
++			if (Group == -1)
++				Group = FindNavigableGroup(1);
++			if (Group != -1)
++				Target = FindUnlockedChapterInGroup(Group);
++		}
++		if (Target != -1)
++			SelectChapterInternal(Target);
+ 	}
+ 
+ };

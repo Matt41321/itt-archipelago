@@ -29,6 +29,12 @@ def discovery_location_name(chapter: Chapter) -> str:
 STORY_CHAPTERS: list[Chapter] = [c for c in CHAPTERS if not c.is_minigame]
 MINIGAMES: list[Chapter] = [c for c in CHAPTERS if c.is_minigame]
 
+MINIGAME_HOST_OVERRIDES: dict[str, str] = {
+    "Chess": "Rehearsal",
+    "Musical Chairs": "Rehearsal",
+    "Track Runner": "Turn Up",
+}
+
 # The story chapter each minigame is in.
 MINIGAME_HOST: dict[str, Chapter] = {}
 _host = None
@@ -37,6 +43,8 @@ for _chapter in CHAPTERS:
         MINIGAME_HOST[_chapter.name] = _host
     else:
         _host = _chapter
+for _minigame, _host_name in MINIGAME_HOST_OVERRIDES.items():
+    MINIGAME_HOST[_minigame] = next(c for c in STORY_CHAPTERS if c.name == _host_name)
 
 # The final chapter's completion is the goal event, not a location.
 COMPLETION_LOCATIONS: dict[str, int] = {

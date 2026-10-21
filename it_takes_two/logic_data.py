@@ -1,4 +1,4 @@
-# Logic node (a location name) -> its sub-chapter. A sub-chapter's first node is its start.
+# Logic node (a location name) -> its sub-chapter, in sheet order. A sub-chapter's first node is its start.
 NODES: dict[str, str] = {
     'Intro Complete': 'Intro',
     'Wake-up Call - Cutscene': 'Wake-up Call',
@@ -475,6 +475,7 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
     'The Depths - Checkpoint 12': [
         ('The Depths - Boss Entry', ('Double Jump', 'Shed Cody Ability')),
         ('The Depths - Boss Entry', ('Dash', 'Shed Cody Ability')),
+        ('The Depths - Boss Entry', ('Dash', 'Double Jump')),
     ],
     'The Depths - Checkpoint 13': [
         ('The Depths - Checkpoint 12', ('Double Jump', 'Shed Cody Ability', 'Shed May Ability')),
@@ -512,16 +513,16 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
         (None, ()),
     ],
     'Wired Up - Checkpoint 1': [
-        ('Wired Up - Entry', ()),
+        ('Wired Up - Entry', ('Grinding',)),
     ],
     'Wired Up - Checkpoint 2': [
-        ('Wired Up - Checkpoint 1', ()),
+        ('Wired Up - Checkpoint 1', ('Grinding',)),
     ],
     'Wired Up - Checkpoint 3': [
-        ('Wired Up - Checkpoint 2', ()),
+        ('Wired Up - Checkpoint 2', ('Grinding',)),
     ],
     'Wired Up Complete': [
-        ('Wired Up - Checkpoint 3', ('Ground Pound',)),
+        ('Wired Up - Checkpoint 3', ('Grinding', 'Ground Pound')),
     ],
     'Fresh Air - Cutscene': [
         (None, ()),
@@ -720,7 +721,7 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
         ('Extermination - Phase 2', ('Tree Cody Ability', 'Tree May Ability')),
     ],
     'Extermination Complete': [
-        ('Extermination - Phase 3', ('Tree Cody Ability', 'Tree May Ability')),
+        ('Extermination - Phase 3', ('Grinding', 'Tree Cody Ability', 'Tree May Ability')),
     ],
     'Getaway - Entry': [
         (None, ()),
@@ -1165,17 +1166,13 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
         ('A Blast from the Past - Checkpoint 6', ('Cuckoo Clock Cody Ability', 'Grinding')),
     ],
     'A Blast from the Past Complete': [
-        ('A Blast from the Past - Checkpoint 7', ()),
+        ('A Blast from the Past - Checkpoint 7', ('Cuckoo Clock Cody Ability', 'Grinding')),
     ],
     'Warming Up - Entry': [
         (None, ()),
     ],
     'Warming Up - Checkpoint 1': [
-        ('Warming Up - Entry', ('Dash', 'Slide', 'Swinging')),
-        ('Warming Up - Entry', ('Dash', 'Double Jump', 'Slide')),
-        ('Warming Up - Entry', ('Double Jump', 'Snow Globe Ability', 'Swinging')),
-        ('Warming Up - Entry', ('Dash', 'Snow Globe Ability', 'Swinging')),
-        ('Warming Up - Entry', ('Slide', 'Snow Globe Ability', 'Sprint', 'Swinging')),
+        ('Warming Up - Entry', ()),
     ],
     'Warming Up - Checkpoint 2': [
         ('Warming Up - Checkpoint 1', ('Dash', 'Slide', 'Swinging')),
@@ -1618,38 +1615,38 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
         (None, ()),
     ],
     'Turn Up - Checkpoint 1': [
-        ('Turn Up - Cutscene', ()),
+        ('Turn Up - Cutscene', ('Grinding', 'Swinging')),
     ],
     'Turn Up - Checkpoint 2': [
-        ('Turn Up - Checkpoint 1', ()),
+        ('Turn Up - Checkpoint 1', ('Grinding', 'Swinging')),
     ],
     'Turn Up - Checkpoint 3': [
-        ('Turn Up - Checkpoint 2', ()),
+        ('Turn Up - Checkpoint 2', ('Grinding', 'Swinging')),
     ],
     'Turn Up - Checkpoint 4': [
-        ('Turn Up - Checkpoint 3', ('Dash', 'Double Jump', 'Ground Pound')),
-        ('Turn Up - Checkpoint 3', ('Attic Cody Ability', 'Attic May Ability', 'Dash', 'Ground Pound', 'Swinging', 'Wall Jump')),
-        ('Turn Up - Checkpoint 3', ('Attic Cody Ability', 'Attic May Ability', 'Double Jump', 'Ground Pound', 'Swinging', 'Wall Jump')),
+        ('Turn Up - Checkpoint 3', ('Dash', 'Double Jump', 'Grinding', 'Ground Pound', 'Swinging')),
+        ('Turn Up - Checkpoint 3', ('Attic Cody Ability', 'Attic May Ability', 'Dash', 'Grinding', 'Ground Pound', 'Swinging', 'Wall Jump')),
+        ('Turn Up - Checkpoint 3', ('Attic Cody Ability', 'Attic May Ability', 'Double Jump', 'Grinding', 'Ground Pound', 'Swinging', 'Wall Jump')),
     ],
     'Turn Up - Checkpoint 5': [
-        ('Turn Up - Checkpoint 4', ('Dash', 'Double Jump', 'Ground Pound')),
-        ('Turn Up - Checkpoint 4', ('Attic Cody Ability', 'Attic May Ability', 'Dash', 'Ground Pound', 'Swinging', 'Wall Jump')),
-        ('Turn Up - Checkpoint 4', ('Attic Cody Ability', 'Attic May Ability', 'Double Jump', 'Ground Pound', 'Swinging', 'Wall Jump')),
+        ('Turn Up - Checkpoint 4', ('Dash', 'Double Jump', 'Grinding', 'Ground Pound', 'Swinging')),
+        ('Turn Up - Checkpoint 4', ('Attic Cody Ability', 'Attic May Ability', 'Dash', 'Grinding', 'Ground Pound', 'Swinging', 'Wall Jump')),
+        ('Turn Up - Checkpoint 4', ('Attic Cody Ability', 'Attic May Ability', 'Double Jump', 'Grinding', 'Ground Pound', 'Swinging', 'Wall Jump')),
     ],
     'Turn Up - Checkpoint 6': [
-        ('Turn Up - Checkpoint 5', ('Dash', 'Double Jump', 'Ground Pound')),
-        ('Turn Up - Checkpoint 5', ('Attic Cody Ability', 'Attic May Ability', 'Dash', 'Ground Pound', 'Swinging', 'Wall Jump')),
-        ('Turn Up - Checkpoint 5', ('Attic Cody Ability', 'Attic May Ability', 'Double Jump', 'Ground Pound', 'Swinging', 'Wall Jump')),
+        ('Turn Up - Checkpoint 5', ('Dash', 'Double Jump', 'Grinding', 'Ground Pound', 'Swinging')),
+        ('Turn Up - Checkpoint 5', ('Attic Cody Ability', 'Attic May Ability', 'Dash', 'Grinding', 'Ground Pound', 'Swinging', 'Wall Jump')),
+        ('Turn Up - Checkpoint 5', ('Attic Cody Ability', 'Attic May Ability', 'Double Jump', 'Grinding', 'Ground Pound', 'Swinging', 'Wall Jump')),
     ],
     'Turn Up - Checkpoint 7': [
-        ('Turn Up - Checkpoint 6', ('Dash', 'Double Jump', 'Ground Pound')),
-        ('Turn Up - Checkpoint 6', ('Attic Cody Ability', 'Attic May Ability', 'Dash', 'Ground Pound', 'Swinging', 'Wall Jump')),
-        ('Turn Up - Checkpoint 6', ('Attic Cody Ability', 'Attic May Ability', 'Double Jump', 'Ground Pound', 'Swinging', 'Wall Jump')),
+        ('Turn Up - Checkpoint 6', ('Dash', 'Double Jump', 'Grinding', 'Ground Pound', 'Swinging')),
+        ('Turn Up - Checkpoint 6', ('Attic Cody Ability', 'Attic May Ability', 'Dash', 'Grinding', 'Ground Pound', 'Swinging', 'Wall Jump')),
+        ('Turn Up - Checkpoint 6', ('Attic Cody Ability', 'Attic May Ability', 'Double Jump', 'Grinding', 'Ground Pound', 'Swinging', 'Wall Jump')),
     ],
     'Turn Up Complete': [
-        ('Turn Up - Checkpoint 1', ('Attic Cody Ability', 'Dash')),
-        ('Turn Up - Checkpoint 7', ('Dash', 'Double Jump', 'Ground Pound')),
-        ('Turn Up - Checkpoint 7', ('Attic Cody Ability', 'Attic May Ability', 'Dash', 'Ground Pound', 'Swinging', 'Wall Jump')),
+        ('Turn Up - Checkpoint 1', ('Attic Cody Ability', 'Dash', 'Grinding', 'Swinging')),
+        ('Turn Up - Checkpoint 7', ('Dash', 'Double Jump', 'Grinding', 'Ground Pound', 'Swinging')),
+        ('Turn Up - Checkpoint 7', ('Attic Cody Ability', 'Attic May Ability', 'Dash', 'Grinding', 'Ground Pound', 'Swinging', 'Wall Jump')),
+        ('Turn Up - Checkpoint 7', ('Attic Cody Ability', 'Attic May Ability', 'Double Jump', 'Grinding', 'Ground Pound', 'Swinging', 'Wall Jump')),
     ],
 }
-

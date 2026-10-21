@@ -1,5 +1,5 @@
 # It Takes Two AP
-Archipelago client implimentation for It Takes Two.
+Archipelago client implementation for It Takes Two.
 
 ## Requirements
 

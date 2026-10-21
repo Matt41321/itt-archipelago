@@ -23,17 +23,22 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.widget import Widget
 
 from .chapter_data import CHAPTERS
+from .items import ABILITY_ITEMS, MOVEMENT_ITEMS
 from .locations import (CHECKPOINT_CHAPTER, CHECKPOINT_LOCATIONS, COMPLETION_LOCATIONS, DISCOVERY_LOCATIONS,
                         MINIGAME_HOST, STORY_CHAPTERS, completion_location_name, discovery_location_name)
 from .rules import node_of, reachable_nodes
 
 IMAGE_DIR = "assets/tracker"
+ITEM_IMAGE_DIR = f"{IMAGE_DIR}/items"
 IMAGE_EXTENSIONS = ("png", "jpg", "jpeg")
 CARD_WIDTH = dp(200)
 IMAGE_HEIGHT = dp(112)
 REFRESH_SECONDS = 1.0
 STATUS_BOX_SIZE = dp(26)
 GROUP_BOX_SIZE = dp(18)
+SIDE_PANEL_WIDTH = dp(190)
+ICON_SIZE = dp(40)
+ICONS_PER_ROW = 3
 
 BACKGROUND = (0.11, 0.11, 0.13, 1)
 CARD = (0.18, 0.18, 0.21, 1)
@@ -46,6 +51,7 @@ IN_LOGIC = (0.16, 0.78, 0.25, 1)
 OUT_OF_LOGIC = (0.88, 0.18, 0.18, 1)
 CHECKED = (0.35, 0.35, 0.38, 1)
 EMPTY_BOX = (0, 0, 0, 0)
+NOT_RECEIVED = (0.3, 0.3, 0.3, 0.6)
 FOUND_MARKUP = "6fcf75"
 IN_LOGIC_MARKUP = "7ee08a"
 OUT_OF_LOGIC_MARKUP = "ff7b7b"
@@ -116,10 +122,10 @@ def check_in_logic(location: str, available: set[str]) -> bool:
     return node_of(location) in logic_nodes(frozenset(available))
 
 
-def load_texture(name: str):
+def load_texture(name: str, folder: str = IMAGE_DIR):
     for extension in IMAGE_EXTENSIONS:
         try:
-            data = pkgutil.get_data(__package__, f"{IMAGE_DIR}/{image_slug(name)}.{extension}")
+            data = pkgutil.get_data(__package__, f"{folder}/{image_slug(name)}.{extension}")
         except OSError:
             continue
         if data:
@@ -240,6 +246,64 @@ def count_markup(counts: CheckCounts, state: "TrackerState") -> str:
     return f"[color={color}]{counts.done} / {counts.total}[/color]"
 
 
+class ItemIcon(BoxLayout):
+    """An item's picture and name, greyed out until it's received."""
+
+    def __init__(self, item: str, **kwargs) -> None:
+        super().__init__(orientation="vertical", size_hint_y=None, height=ICON_SIZE + dp(38), spacing=dp(2),
+                         **kwargs)
+        self.item = item
+        self.received = None
+        texture = load_texture(item, ITEM_IMAGE_DIR)
+        if texture is not None:
+            self.picture = Image(texture=texture, fit_mode="contain", size_hint=(None, None),
+                                 size=(ICON_SIZE, ICON_SIZE), pos_hint={"center_x": 0.5})
+        else:
+            # Initials until there's a picture, e.g. "Double Jump" -> DJ
+            initials = "".join(word[0] for word in re.findall(r"[A-Za-z]+", item))[:3].upper()
+            self.picture = Label(text=f"[b]{initials}[/b]", markup=True, font_size="13sp", size_hint=(None, None),
+                                 size=(ICON_SIZE, ICON_SIZE), pos_hint={"center_x": 0.5})
+            with_background(self.picture, CARD, BORDER)
+        self.add_widget(self.picture)
+        self.name_label = Label(text=item, font_size="10sp", halign="center", valign="top")
+        self.name_label.bind(size=lambda name, size: setattr(name, "text_size", size))
+        self.add_widget(self.name_label)
+        self.set_received(False)
+
+    def set_received(self, received: bool) -> None:
+        if received == self.received:
+            return
+        self.received = received
+        self.picture.color = (1, 1, 1, 1) if received else NOT_RECEIVED
+        self.name_label.color = (1, 1, 1, 1) if received else NOT_RECEIVED
+
+
+class ItemPanel(ScrollView):
+    """Every movement item and gadget, always shown next to the cards."""
+
+    def __init__(self, **kwargs) -> None:
+        super().__init__(do_scroll_x=False, size_hint_x=None, width=SIDE_PANEL_WIDTH, **kwargs)
+        with_background(self, TAB)
+        column = BoxLayout(orientation="vertical", size_hint_y=None, padding=dp(8), spacing=dp(6))
+        column.bind(minimum_height=column.setter("height"))
+        self.icons: list[ItemIcon] = []
+        for title, items in (("Movement", MOVEMENT_ITEMS), ("Gadgets", ABILITY_ITEMS)):
+            column.add_widget(Label(text=f"[b]{title}[/b]", markup=True, font_size="14sp", size_hint_y=None,
+                                    height=dp(24)))
+            grid = GridLayout(cols=ICONS_PER_ROW, size_hint_y=None, spacing=dp(4))
+            grid.bind(minimum_height=grid.setter("height"))
+            for item in items:
+                icon = ItemIcon(item)
+                self.icons.append(icon)
+                grid.add_widget(icon)
+            column.add_widget(grid)
+        self.add_widget(column)
+
+    def update(self, state: "TrackerState") -> None:
+        for icon in self.icons:
+            icon.set_received(icon.item in state.available)
+
+
 class GroupTab(ButtonBehavior, BoxLayout):
 
     def __init__(self, group: str, **kwargs) -> None:
@@ -334,7 +398,11 @@ class TrackerTab(BoxLayout):
         scroll = ScrollView(do_scroll_x=False)
         scroll.add_widget(self.grid)
         scroll.bind(width=self.fit_columns)
-        self.add_widget(scroll)
+        self.item_panel = ItemPanel()
+        body = BoxLayout(orientation="horizontal")
+        body.add_widget(self.item_panel)
+        body.add_widget(scroll)
+        self.add_widget(body)
 
         for group, sub_chapters in self.layout.items():
             self.cards[group] = [SubChapterCard(sub_chapter) for sub_chapter in sub_chapters]
@@ -369,6 +437,7 @@ class TrackerTab(BoxLayout):
 
     def refresh(self, *_) -> None:
         state = self.check_state()
+        self.item_panel.update(state)
         for group, cards in self.cards.items():
             for card in cards:
                 card.update(state)

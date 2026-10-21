@@ -15,7 +15,7 @@ local HeartbeatFile = BridgeDir .. "heartbeat.txt"
 
 local PollMs = 500
 local MenuPollMs = 100
-local KickCooldownSeconds = 10
+local SendBackCooldownSeconds = 10
 local HeartbeatTimeoutSeconds = 5
 
 -- Must match MOVEMENT_ITEMS in items.py.
@@ -69,10 +69,21 @@ local function MapRoot(Key)
     return Key:match("%(([^/%)]+)")
 end
 
+-- "VacuumIntro (Shed/Vacuum)" -> "Shed/Vacuum"
+local function MapFolder(Key)
+    return Key:match("%(([^%)]+)%)$")
+end
+
 local ChapterByKey = {}
 local ChapterByName = {}
 local ChapterByMinigameId = {}
 local NextStoryChapter = {}
+local MinigameHost = {}
+local MinigameHostOverrides = {
+    ["Chess"] = "Rehearsal",
+    ["Musical Chairs"] = "Rehearsal",
+    ["Track Runner"] = "Turn Up",
+}
 local GroupByMapRoot = {}
 local MinigameOrder = {}
 do
@@ -86,6 +97,7 @@ do
         if Chapter.is_minigame then
             ChapterByMinigameId[Chapter.minigame_id] = Chapter
             table.insert(MinigameOrder, Chapter)
+            MinigameHost[Chapter.name] = MinigameHostOverrides[Chapter.name] or (Previous and Previous.name)
         else
             if Previous then
                 NextStoryChapter[Previous.name] = Chapter.name
@@ -286,42 +298,82 @@ local function ApplyBlocks(State, PlayerList, Capabilities, Reblock)
 end
 
 ------------------------------------------------------------------------------------------------------------------------
--- Chapter progress: completion checks, and kicking players out of locked chapters.
+-- Chapter progress: completion checks, and sending players back out of chapters they can't be in.
 
 local LastActivePoint = nil
 local LastChapter = (ReadLines(LastChapterFile) or {})[1]
 local CurrentChapter = nil
-local LastKickTime = 0
+local LastSendBackTime = 0
+local FinaleSendBackPending = false
+local FinaleSendBackPendingSince = 0
+local FinaleActivated = false
+local FinaleActivatedTimeoutSeconds = 10
 
 local PickerChapter = nil
 local PickerSeenTime = 0
+local PickerSelections = {}
 local ChapterSelectWindowSeconds = 60
 
 local function CameFromChapterSelect(Chapter)
     return PickerChapter == Chapter.name and os.time() - PickerSeenTime <= ChapterSelectWindowSeconds
 end
 
-local function OnEnterChapter(State, Chapter, Player, Progress)
-    if CameFromChapterSelect(Chapter) then
-        Log("Entered " .. Chapter.name .. " from chapter select; no completion check")
-        if not State.Chapters[Chapter.name] and os.time() - LastKickTime > KickCooldownSeconds then
-            LastKickTime = os.time()
-            Log(Chapter.name .. " is locked and was picked in chapter select; returning to main menu")
-            Progress:ReturnToMainMenu(Player, nil)
-            return
+local function StartPointOf(Chapter)
+    return Chapter.level .. "##" .. Chapter.point
+end
+
+-- The start of an unlocked sub-chapter: the last one played if it's unlocked, else the first unlocked one.
+local function SendBackTarget(State, Blocked)
+    local Previous = LastChapter and ChapterByName[LastChapter]
+    if Previous and Previous ~= Blocked and State.Chapters[Previous.name] then
+        return StartPointOf(Previous)
+    end
+    for _, Chapter in ipairs(Chapters) do
+        if not Chapter.is_minigame and Chapter ~= Blocked and State.Chapters[Chapter.name] then
+            return StartPointOf(Chapter)
         end
+    end
+    return nil
+end
+
+local function SendBack(State, Chapter, Player, Progress, Reason)
+    if os.time() - LastSendBackTime <= SendBackCooldownSeconds then return end
+    LastSendBackTime = os.time()
+    local Target = SendBackTarget(State, Chapter)
+    if Target then
+        Log(Chapter.name .. " is locked (" .. Reason .. "); restarting from " .. Target)
+        Progress:RestartFromProgressPoint(Player, Target, false)
+    else
+        Log(Chapter.name .. " is locked (" .. Reason .. ") and nothing is unlocked to go back to; returning to main menu")
+        Progress:ReturnToMainMenu(Player, nil)
+    end
+end
+
+local function OnEnterChapter(State, Chapter, Player, Progress)
+    local FromChapterSelect = CameFromChapterSelect(Chapter)
+    if FromChapterSelect then
+        Log("Entered " .. Chapter.name .. " from chapter select; no completion check")
     elseif LastChapter and NextStoryChapter[LastChapter] == Chapter.name and LastChapter ~= FinalChapter then
         SendCheck(LastChapter .. " Complete")
         -- Played into this sub-chapter; the client unlocks it if Unlock Reached Sub-Chapters is on.
         SendCheck(ReachedPrefix .. Chapter.name)
     end
     PickerChapter = nil
+    if not State.Chapters[Chapter.name] and Chapter.name == FinalChapter and not FromChapterSelect then
+        FinaleSendBackPending = true
+        FinaleSendBackPendingSince = os.time()
+        return
+    end
+    if not State.Chapters[Chapter.name] and FromChapterSelect then
+        SendBack(State, Chapter, Player, Progress, "picked in chapter select")
+        return
+    end
     LastChapter = Chapter.name
     WriteFile(LastChapterFile, LastChapter .. "\n")
 end
 
 local function SendCheckpoint(State, Key)
-    if State and Checkpoints[Key] and os.time() - LastKickTime > KickCooldownSeconds then
+    if State and Checkpoints[Key] and os.time() - LastSendBackTime > SendBackCooldownSeconds then
         SendCheck("cp:" .. Key)
     end
 end
@@ -340,8 +392,30 @@ local function ApplyProgress(State, PlayerList, Progress)
             Log("Entered chapter: " .. Chapter.name .. " (" .. Chapter.group .. ")")
             CurrentChapter = Chapter
             if State then OnEnterChapter(State, Chapter, Player, Progress) end
+        else
+            local Owner = Checkpoints[Active] or (Chapter and MinigameHost[Chapter.name])
+            if State and Owner and Owner ~= LastChapter and (Owner ~= FinalChapter or State.Chapters[Owner]) then
+                Log("In " .. Owner .. " (" .. Active .. ")")
+                LastChapter = Owner
+                WriteFile(LastChapterFile, LastChapter .. "\n")
+            end
         end
         SendCheckpoint(State, Active)
+    end
+
+    local Finale = ChapterByName[FinalChapter]
+    if FinaleActivated then
+        FinaleSendBackPending = false
+        FinaleActivated = false
+        if State then SendBack(State, Finale, Player, Progress, "played into") end
+    end
+    local WaitingForActivation = FinaleSendBackPending
+        and os.time() - FinaleSendBackPendingSince < FinaleActivatedTimeoutSeconds
+
+    if State and not WaitingForActivation and not State.Chapters[FinalChapter]
+        and MapFolder(Active) == MapFolder(Finale.key) then
+        FinaleSendBackPending = false
+        SendBack(State, Finale, Player, Progress, "still in it")
     end
 
     local Group = GroupByMapRoot[MapRoot(Active) or ""]
@@ -440,16 +514,24 @@ end
 
 local function ApplyMenuLocks(State)
     local ChapterMask = UnlockedChapterMask(State)
+    local Selections = {}
     for _, Picker in ipairs(FindAllOf("ChapterSelectPickerWidget") or {}) do
         if Picker:IsValid() then
             if IsPatched(Picker, "IsArchipelagoChapterUnlocked")
                     and Picker.ArchipelagoUnlockedChapters ~= ChapterMask then
                 Picker.ArchipelagoUnlockedChapters = ChapterMask
             end
-            PickerChapter = Picker.SelectedChapter.Name:ToString()
-            PickerSeenTime = os.time()
+            local Address = Picker:GetAddress()
+            local Selected = Picker.SelectedChapter.Name:ToString()
+            Selections[Address] = Selected
+            if PickerSelections[Address] ~= Selected and PickerChapter ~= Selected then
+                PickerChapter = Selected
+                Log("Chapter select: " .. Selected)
+            end
+            if Selected == PickerChapter then PickerSeenTime = os.time() end
         end
     end
+    PickerSelections = Selections
 
     local MinigameMask = DiscoveredMinigameMask(State)
     for _, Picker in ipairs(FindAllOf("MinigamePickerWidget") or {}) do
@@ -484,6 +566,9 @@ local function ApplyProgressEvents(State)
             local Key = Name .. " (" .. Folder .. ")"
             Log("Progress event: " .. Kind .. " " .. Key)
             StartSettle(Kind .. " " .. Key)
+            if Kind == "reached" and FinaleSendBackPending and Key == ChapterByName[FinalChapter].key then
+                FinaleActivated = true  -- sent back on the next tick
+            end
             if Kind == "saved" or Kind == "reached" then SendCheckpoint(State, Key) end
         end
     end

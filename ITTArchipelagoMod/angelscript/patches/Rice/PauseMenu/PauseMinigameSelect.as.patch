@@ -1,0 +1,17 @@
+# ArchipelagoITT patch for Nuts/Script/Rice/PauseMenu/PauseMinigameSelect.as
+# vanilla-sha256: 89ff83a6ac022ab2191b2766dbb0d4f91f69109d89b27c7f5ebc53fa70a62329
+# patched-sha256: 7b51c6e427c7bad2329e24daaf58ee054102235f8e7a74f8cff1d59003e4bbce
+# patched-ends-with-newline: no
+--- a/Rice/PauseMenu/PauseMinigameSelect.as
++++ b/Rice/PauseMenu/PauseMinigameSelect.as
+@@ -58,6 +58,10 @@
+ 	UFUNCTION()
+ 	void PlayMinigame()
+ 	{
++		// Archipelago: no minigame discovered yet.
++		if (!MinigamePicker.bHasUnlockedMinigames)
++			return;
++
+ 		if (Save::HasMinigameToRestart())
+ 		{
+ 			// If we're already playing a minigame we don't have a save to lose

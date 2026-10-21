@@ -1,0 +1,15 @@
+# ArchipelagoITT patch for Nuts/Script/Vino/Movement/Jump/CharacterResetAirJumpsCapability.as
+# vanilla-sha256: 369d442405aa9df07cd1630db11088e27d80e7c00db1a0d062228fcfa077bce7
+# patched-sha256: 88fbf0dfc2e9aed2b49ffb84ae2bf517a971e26baa40e653067aa96bc4d90903
+# patched-ends-with-newline: yes
+--- a/Vino/Movement/Jump/CharacterResetAirJumpsCapability.as
++++ b/Vino/Movement/Jump/CharacterResetAirJumpsCapability.as
+@@ -5,6 +5,8 @@
+ {
+ 	default CapabilityTags.Add(n"AirJump");
+ 	default CapabilityTags.Add(n"AirJumpReset");
++	// Archipelago: keep refilling air jump/dash charges while Double Jump is locked.
++	default BlockExclusionTags.Add(n"ArchipelagoKeep");
+ 	
+ 	default TickGroup = ECapabilityTickGroups::BeforeMovement;
+ 	default TickGroupOrder = 3;

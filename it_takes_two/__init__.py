@@ -13,7 +13,7 @@ from .locations import (CHECKPOINT_LOCATIONS, COMPLETION_LOCATIONS, DISCOVERY_LO
                         LOCATION_GROUPS, LOCATION_NAME_TO_ID, MINIGAME_EVENT, MINIGAMES, STORY_CHAPTERS, VICTORY_EVENT,
                         ItTakesTwoLocation, completion_location_name, discovery_location_name)
 from .logic_data import NODES
-from .options import Goal, ItTakesTwoOptions, StartingMovement, StartingSubChapters
+from .options import Goal, ItTakesTwoOptions, StartingMovement, StartingSubChapters, itt_option_groups
 from .rules import ENTRANCES, FINALE_REQUIREMENTS, node_of, reachable_nodes
 
 def launch_client(*args: str) -> None:

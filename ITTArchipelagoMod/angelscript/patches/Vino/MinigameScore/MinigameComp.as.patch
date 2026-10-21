@@ -1,0 +1,33 @@
+# ArchipelagoITT patch for Nuts/Script/Vino/MinigameScore/MinigameComp.as
+# vanilla-sha256: d5863a17e4dd1cb55718ebedeb714df8e271827da91835ce3ac933659199b4f4
+# patched-sha256: 612b2437ef27ded0155e372f56ebadb8fac9d4ea2c966b702c81bcbc737a6924
+# patched-ends-with-newline: no
+--- a/Vino/MinigameScore/MinigameComp.as
++++ b/Vino/MinigameScore/MinigameComp.as
+@@ -254,6 +254,17 @@
+ 	int MayInRange;
+ 	int CodyInRange;
+ 
++	// Archipelago: set when a player enters the HUD area, read by the mod.
++	UPROPERTY()
++	bool bArchipelagoPlayerInHudArea = false;
++
++	// Archipelago: lets the mod check this patch is loaded.
++	UFUNCTION()
++	bool HasArchipelagoPlayerInHudArea() const
++	{
++		return bArchipelagoPlayerInHudArea;
++	}
++
+ 	int PlayerInAreaRange;
+ 
+ 	bool bPlayersInRange;
+@@ -782,6 +793,8 @@
+ 		else if (Player == Game::Cody)
+ 			CodyInRange++;
+ 
++		bArchipelagoPlayerInHudArea = true;
++
+ 		if (!bCanDeactivateGameHud)
+ 			return;
+ 
