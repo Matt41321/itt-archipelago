@@ -33,3 +33,9 @@ Double-click `it_takes_two.apworld` to add it to Archipelago, or copy it into th
 1. Open the Archipelago Launcher and click **It Takes Two Client**.
 2. Enter the server address (for example `archipelago.gg:12345`) and connect with your slot name.
 3. Start It Takes Two through Steam as normal.
+
+## Credits
+
+- [RE-UE4SS](https://github.com/UE4SS-RE/RE-UE4SS) (MIT license) runs the mod's Lua scripts. The installer bundles
+  UE4SS experimental build v3.0.1-1175 unmodified, with its license, plus this mod's config for It Takes Two
+  (`ITTArchipelagoMod/ue4ss/config`).
