@@ -1,0 +1,123 @@
+# ArchipelagoITT patch for Nuts/Script/Rice/MainMenu/ChapterSelectWidget.as
+# vanilla-sha256: 4ef26b3e29d4131dec2753def96eecfdab26838307effc58652047d946644a11
+# patched-sha256: e0569192a37890d15de1a18c222f756a41c626b943807f30ed8644a1b9d5d50b
+# patched-ends-with-newline: no
+--- a/Rice/MainMenu/ChapterSelectWidget.as
++++ b/Rice/MainMenu/ChapterSelectWidget.as
+@@ -56,6 +56,9 @@
+ 	UPROPERTY()
+ 	bool bIsButtonEnabled = true;
+ 
++	// Archipelago: set by the lobby while this start type is locked; kept apart from bIsButtonEnabled, which BP sets.
++	bool bArchipelagoLocked = false;
++
+ 	private bool bHovered = false;
+ 
+ 	UPROPERTY()
+@@ -67,7 +70,7 @@
+ 		auto Lobby = Lobby::GetLobby();
+ 		if (Lobby != nullptr && Lobby.Network == EHazeLobbyNetwork::Join)
+ 			return false;
+-		return bHovered && bIsButtonEnabled;
++		return bHovered && bIsButtonEnabled && !bArchipelagoLocked;
+ 	}
+ 
+ 	UFUNCTION(BlueprintPure)
+@@ -82,7 +85,7 @@
+ 		auto Lobby = Lobby::GetLobby();
+ 		if (Lobby != nullptr && Lobby.Network == EHazeLobbyNetwork::Join)
+ 			return true;
+-		return bIsButtonEnabled;
++		return bIsButtonEnabled && !bArchipelagoLocked;
+ 	}
+ 
+ 	UFUNCTION(BlueprintPure)
+@@ -130,7 +133,7 @@
+ 	{
+ 		if (Event.EffectingButton == EKeys::LeftMouseButton)
+ 		{
+-			if (bIsButtonEnabled)
++			if (bIsButtonEnabled && !bArchipelagoLocked)
+ 				OnPressed.Broadcast();
+ 			return FEventReply::Handled();
+ 		}
+@@ -269,6 +272,11 @@
+ 	default bCustomNavigation = true;
+ 
+ 	bool bHasContinue = false;
++
++	// Archipelago: set by the mod while connected; New Game and Continue would skip the chapter locks.
++	UPROPERTY()
++	bool bArchipelagoLockStartTypes = false;
++
+ 	bool bInFriendsPassPopup = false;
+ 	EFriendListState FriendListState = EFriendListState::None;
+ 	UHazeOnlineFriend ActionFriend;
+@@ -639,6 +647,9 @@
+ 		if (!Lobby.LobbyOwner.IsLocal())
+ 			return true;
+ 
++		if (IsArchipelagoStartTypeLocked(Lobby.StartType))
++			return false;
++
+ 		switch (Lobby.StartType)
+ 		{
+ 			case EHazeLobbyStartType::NewGame:
+@@ -704,7 +715,7 @@
+ 				}
+ 			}
+ 
+-			bool bIsStartTypeValid = true;
++			bool bIsStartTypeValid = !IsArchipelagoStartTypeLocked(NewStartType);
+ 			switch (NewStartType)
+ 			{
+ 				case EHazeLobbyStartType::Continue:
+@@ -741,7 +752,10 @@
+ 		if (!Lobby.LobbyOwner.IsLocal())
+ 			return;
+ 
+-		switch (StartType)
++		// Archipelago: locked start types go to chapter select.
++		EHazeLobbyStartType Pick = IsArchipelagoStartTypeLocked(StartType) ? EHazeLobbyStartType::ChapterSelect : StartType;
++
++		switch (Pick)
+ 		{
+ 			case EHazeLobbyStartType::NewGame:
+ 			{
+@@ -1538,6 +1552,27 @@
+ 		}
+ 	}
+ 
++	// Archipelago: chapter select needs a save, so with none New Game stays open.
++	UFUNCTION()
++	bool IsArchipelagoStartTypeLocked(EHazeLobbyStartType StartType) const
++	{
++		return bArchipelagoLockStartTypes && bHasContinue
++			&& (StartType == EHazeLobbyStartType::NewGame || StartType == EHazeLobbyStartType::Continue);
++	}
++
++	void UpdateArchipelagoLocks()
++	{
++		FChapterSelectButtons Buttons = GetButtonsForNarration();
++		if (Buttons.NewGame != nullptr)
++			Buttons.NewGame.bArchipelagoLocked = IsArchipelagoStartTypeLocked(EHazeLobbyStartType::NewGame);
++		if (Buttons.Continue != nullptr)
++			Buttons.Continue.bArchipelagoLocked = IsArchipelagoStartTypeLocked(EHazeLobbyStartType::Continue);
++
++		// New lobbies default to Continue; move them to chapter select.
++		if (Lobby.LobbyOwner.IsLocal() && IsArchipelagoStartTypeLocked(Lobby.StartType))
++			SetLobbyStartType(EHazeLobbyStartType::ChapterSelect);
++	}
++
+ 	UFUNCTION(BlueprintPure)
+ 	bool HasContinueSave()
+ 	{
+@@ -1614,6 +1649,8 @@
+ 				}
+ 			}
+ 		}
++
++		UpdateArchipelagoLocks();
+ 
+ 		// Inform BP if the start type has changed
+ 		if (CurrentStartType != Lobby.StartType)

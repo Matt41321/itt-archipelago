@@ -1,7 +1,4 @@
-"""Tracker tab for the client: a tab per chapter, a card per sub-chapter, and a list of its checks on hover.
-
-Pictures are assets/tracker/<name>.png or .jpg, e.g. "Wake-up Call" -> wake_up_call.jpg.
-"""
+"""Tracker tab for the client. Pictures go in assets/tracker and assets/tracker/items."""
 import io
 import pkgutil
 import re
@@ -79,10 +76,17 @@ class CheckCounts(NamedTuple):
         return CheckCounts(*(mine + theirs for mine, theirs in zip(self, other)))
 
 
+class GoalProgress(NamedTuple):
+    label: str
+    progress: int
+    required: int
+
+
 class TrackerState(NamedTuple):
     found: set[str]
     in_seed: set[str] | None  # None until connected
     available: set[str]
+    goal: GoalProgress | None  # None until connected
 
 
 def image_slug(name: str) -> str:
@@ -90,7 +94,7 @@ def image_slug(name: str) -> str:
 
 
 def build_layout() -> dict[str, list[SubChapter]]:
-    """Chapter group -> its sub-chapters, each with its checkpoints, minigames and completion."""
+    """Chapter group -> sub-chapters and their checks."""
     checkpoints: dict[str, list[str]] = {}
     for name in CHECKPOINT_LOCATIONS:
         checkpoints.setdefault(CHECKPOINT_CHAPTER[name], []).append(name)
@@ -247,7 +251,7 @@ def count_markup(counts: CheckCounts, state: "TrackerState") -> str:
 
 
 class ItemIcon(BoxLayout):
-    """An item's picture and name, greyed out until it's received."""
+    """Item picture and name, grey until received."""
 
     def __init__(self, item: str, **kwargs) -> None:
         super().__init__(orientation="vertical", size_hint_y=None, height=ICON_SIZE + dp(38), spacing=dp(2),
@@ -259,7 +263,7 @@ class ItemIcon(BoxLayout):
             self.picture = Image(texture=texture, fit_mode="contain", size_hint=(None, None),
                                  size=(ICON_SIZE, ICON_SIZE), pos_hint={"center_x": 0.5})
         else:
-            # Initials until there's a picture, e.g. "Double Jump" -> DJ
+            # Initials if there's no picture
             initials = "".join(word[0] for word in re.findall(r"[A-Za-z]+", item))[:3].upper()
             self.picture = Label(text=f"[b]{initials}[/b]", markup=True, font_size="13sp", size_hint=(None, None),
                                  size=(ICON_SIZE, ICON_SIZE), pos_hint={"center_x": 0.5})
@@ -279,13 +283,16 @@ class ItemIcon(BoxLayout):
 
 
 class ItemPanel(ScrollView):
-    """Every movement item and gadget, always shown next to the cards."""
+    """Goal, movement and gadgets."""
 
     def __init__(self, **kwargs) -> None:
         super().__init__(do_scroll_x=False, size_hint_x=None, width=SIDE_PANEL_WIDTH, **kwargs)
         with_background(self, TAB)
         column = BoxLayout(orientation="vertical", size_hint_y=None, padding=dp(8), spacing=dp(6))
         column.bind(minimum_height=column.setter("height"))
+        column.add_widget(Label(text="[b]Goal[/b]", markup=True, font_size="14sp", size_hint_y=None, height=dp(24)))
+        self.goal_label = Label(markup=True, font_size="15sp", size_hint_y=None, height=dp(24))
+        column.add_widget(self.goal_label)
         self.icons: list[ItemIcon] = []
         for title, items in (("Movement", MOVEMENT_ITEMS), ("Gadgets", ABILITY_ITEMS)):
             column.add_widget(Label(text=f"[b]{title}[/b]", markup=True, font_size="14sp", size_hint_y=None,
@@ -300,6 +307,10 @@ class ItemPanel(ScrollView):
         self.add_widget(column)
 
     def update(self, state: "TrackerState") -> None:
+        if state.goal is None:
+            self.goal_label.text = f"[color={MUTED_MARKUP}]not connected[/color]"
+        else:
+            self.goal_label.text = f"{state.goal.label} {state.goal.progress}/{state.goal.required}"
         for icon in self.icons:
             icon.set_received(icon.item in state.available)
 
@@ -367,7 +378,7 @@ class ChecksPopup(Label):
             self.parent.remove_widget(self)
 
     def follow(self, x: float, y: float) -> None:
-        """Position next to the cursor, inside the window."""
+        """Keep next to the cursor."""
         left = x + dp(16) if x + dp(16) + self.width <= Window.width else x - dp(16) - self.width
         bottom = y - dp(12) - self.height
         if bottom < 0:
@@ -433,7 +444,12 @@ class TrackerTab(BoxLayout):
         lookup = self.ctx.location_names.lookup_in_game
         found = {lookup(location_id) for location_id in self.ctx.checked_locations}
         in_seed = {lookup(location_id) for location_id in self.ctx.server_locations} or None
-        return TrackerState(found, in_seed, self.ctx.available_items())
+        goal = None
+        if self.ctx.goal is not None:
+            _, progress = self.ctx.goal_progress()
+            label = "Minigames" if self.ctx.goal == "minigames" else "Page"
+            goal = GoalProgress(label, progress, self.ctx.goal_required)
+        return TrackerState(found, in_seed, self.ctx.available_items(), goal)
 
     def refresh(self, *_) -> None:
         state = self.check_state()

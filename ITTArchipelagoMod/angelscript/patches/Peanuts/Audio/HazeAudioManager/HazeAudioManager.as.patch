@@ -1,10 +1,18 @@
 # ArchipelagoITT patch for Nuts/Script/Peanuts/Audio/HazeAudioManager/HazeAudioManager.as
 # vanilla-sha256: 25806059ba467e119d6616109ebdb2287ee91e738ee92039faed4aeec3543b82
-# patched-sha256: 243c26d9f29cc1939c93c8633319540a3db84ce74478181123bcf759c1ed34a7
+# patched-sha256: b77f7b65abb510aa6a3ad80c767e35744d6a4cab3b03cc4231c7ddce38cd9760
 # patched-ends-with-newline: no
 --- a/Peanuts/Audio/HazeAudioManager/HazeAudioManager.as
 +++ b/Peanuts/Audio/HazeAudioManager/HazeAudioManager.as
-@@ -21,6 +21,17 @@
+@@ -2,6 +2,7 @@
+ import Rice.Audio.UserInterfaceAudioDataAsset;
+ import Peanuts.Audio.LevelAudioStatesDataAsset;
+ import Peanuts.Audio.Music.LevelLoadingMusicTransitionDataAsset;
++import Archipelago.ArchipelagoVersionWidget;
+ 
+ class UHazeAudioManager : UHazeAudioManagerSingleton
+ {
+@@ -21,6 +22,20 @@
  	FString LatestProgressPointLevel;
  	FString CurrentInLevel;
  	FString CurrentCheckpointName;
@@ -12,6 +20,9 @@
 +	// Archipelago: progress events, read by the mod.
 +	UPROPERTY()
 +	TArray<FString> ArchipelagoProgressEvents;
++
++	// Archipelago: version text.
++	UHazeUserWidget ArchipelagoVersionWidget;
 +
 +	// Archipelago: lets the mod check this patch is loaded.
 +	UFUNCTION()
@@ -22,7 +33,7 @@
  
  	FString CurrentLevelGroup;
  	FString CurrentSubLevel;
-@@ -528,6 +539,7 @@
+@@ -528,6 +543,7 @@
  	UFUNCTION(BlueprintOverride)
  	void OnActivatedProgressPoint(FString InLevel, FString CheckpointName)
  	{
@@ -30,7 +41,7 @@
  		LatestProgressPointLevel = InLevel;
  		bQueueMusicManagerLoadTransition = true;
  	}
-@@ -535,6 +547,7 @@
+@@ -535,6 +551,7 @@
  	UFUNCTION(BlueprintOverride)
  	void OnProgressionPointUpdate(FString InLevel, FString CheckpointName, bool bFromSave)
  	{
@@ -38,3 +49,17 @@
  		CurrentInLevel = InLevel;
  		CurrentCheckpointName = CheckpointName;
  		UpdateLevelProgressionState();
+@@ -603,6 +620,13 @@
+ 	UFUNCTION(BlueprintOverride)
+ 	void Tick(float DeltaSeconds)
+ 	{
++		if (ArchipelagoVersionWidget == nullptr)
++		{
++			ArchipelagoVersionWidget = Widget::AddFullscreenWidget(UArchipelagoVersionWidget::StaticClass(), EHazeWidgetLayer::Dev);
++			if (ArchipelagoVersionWidget != nullptr)
++				ArchipelagoVersionWidget.SetWidgetPersistent(true);
++		}
++
+ 		const bool bIsLoading = Game::IsInLoadingScreen();
+ 		if (bWasLoading != bIsLoading)
+ 		{

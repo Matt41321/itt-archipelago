@@ -6,7 +6,8 @@ using System.IO.Compression;
 using System.Reflection;
 using Microsoft.Win32;
 
-const string ModName = "ArchipelagoITT";
+const string ModPrefix = "ArchipelagoITT";
+const string ModName = ModPrefix + "v0.1.2";
 const string BackupSuffix = ".ap-backup";  // left by older versions
 
 Console.Title = "It Takes Two Archipelago mod installer";
@@ -41,7 +42,7 @@ void Run()
     Console.WriteLine($"It Takes Two folder: {game}");
     Console.WriteLine();
 
-    bool installed = File.Exists(Path.Combine(game, "Mods", ModName, "Scripts", "main.lua"));
+    bool installed = ModFolders(game).Any(folder => File.Exists(Path.Combine(folder, "Scripts", "main.lua")));
     Console.WriteLine(installed ? "The mod is already installed." : "The mod is not installed yet.");
     Console.WriteLine(installed ? "  [Enter] Update / repair    [U] Uninstall    [Q] Quit" : "  [Enter] Install    [Q] Quit");
     Console.Write("> ");
@@ -91,8 +92,8 @@ string? GameFolderFrom(string path)
 void Install(string game)
 {
     string win64 = Path.Combine(game, "Nuts", "Binaries", "Win64");
-    DeleteFolder(Path.Combine(game, "Mods", ModName));
-    DeleteFolder(Path.Combine(win64, "ue4ss", "Mods", ModName));
+    DeleteModFolders(game);
+    DeleteFolder(Path.Combine(win64, "ue4ss", "Mods", ModPrefix));
     RestoreBackups(game);
 
     using Stream payload = Assembly.GetExecutingAssembly().GetManifestResourceStream("payload.zip")
@@ -118,10 +119,23 @@ void Uninstall(string game)
     DeleteFile(Path.Combine(win64, "version.dll"));
     DeleteFile(Path.Combine(win64, "dwmapi.dll"));
     DeleteFolder(Path.Combine(win64, "ue4ss"));
-    DeleteFolder(Path.Combine(game, "Mods", ModName));
+    DeleteModFolders(game);
     DeleteFile(Path.Combine(game, "Mods", "ModLoader.log"));
     RestoreBackups(game);
     Console.WriteLine("Uninstalled. The game is back to normal.");
+}
+
+// This mod's folders in <game>/Mods, from any version (ArchipelagoITT, ArchipelagoITTv0.1.2, ...).
+IEnumerable<string> ModFolders(string game)
+{
+    string mods = Path.Combine(game, "Mods");
+    return Directory.Exists(mods) ? Directory.GetDirectories(mods, ModPrefix + "*") : [];
+}
+
+// The loader loads every folder in Mods, so an older version's folder left behind would load twice.
+void DeleteModFolders(string game)
+{
+    foreach (string folder in ModFolders(game)) DeleteFolder(folder);
 }
 
 // Restores game scripts replaced by older versions.

@@ -14,8 +14,6 @@ for _previous, _next in zip(STORY_CHAPTERS, STORY_CHAPTERS[1:]):
         ENTRANCES[CHAPTER_STARTS[_next.name]].append((completion_location_name(_previous), ()))
 
 SAME_AS: dict[str, str] = {
-    "Biting the Dust - Boss Entry": "Biting the Dust - Boss Cutscene",
-    "Deeply Rooted - Entry": "Deeply Rooted - Entry Cutscene",
 }
 
 FINALE_REQUIREMENTS = frozenset(BASIC_MOVEMENT)

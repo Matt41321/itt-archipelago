@@ -298,7 +298,7 @@ local function ApplyBlocks(State, PlayerList, Capabilities, Reblock)
 end
 
 ------------------------------------------------------------------------------------------------------------------------
--- Chapter progress: completion checks, and sending players back out of chapters they can't be in.
+-- Chapter progress: completion checks, and sending players back out of the finale when it is locked.
 
 local LastActivePoint = nil
 local LastChapter = (ReadLines(LastChapterFile) or {})[1]
@@ -364,7 +364,8 @@ local function OnEnterChapter(State, Chapter, Player, Progress)
         FinaleSendBackPendingSince = os.time()
         return
     end
-    if not State.Chapters[Chapter.name] and FromChapterSelect then
+    -- Only the finale is enforced; other locked sub-chapters can be played freely.
+    if not State.Chapters[Chapter.name] and Chapter.name == FinalChapter then
         SendBack(State, Chapter, Player, Progress, "picked in chapter select")
         return
     end
@@ -532,6 +533,15 @@ local function ApplyMenuLocks(State)
         end
     end
     PickerSelections = Selections
+
+    -- New Game and Continue would skip past the chapter locks, so the lobby only offers them with no session.
+    local LockStartTypes = State ~= nil
+    for _, Lobby in ipairs(FindAllOf("ChapterSelectWidget") or {}) do
+        if Lobby:IsValid() and IsPatched(Lobby, "IsArchipelagoStartTypeLocked")
+                and Lobby.bArchipelagoLockStartTypes ~= LockStartTypes then
+            Lobby.bArchipelagoLockStartTypes = LockStartTypes
+        end
+    end
 
     local MinigameMask = DiscoveredMinigameMask(State)
     for _, Picker in ipairs(FindAllOf("MinigamePickerWidget") or {}) do

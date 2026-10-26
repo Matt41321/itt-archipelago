@@ -23,7 +23,7 @@ CHAPTER_ITEMS: dict[str, ItemData] = {
     for chapter in CHAPTERS if not chapter.is_minigame
 }
 
-# Item -> the capability tag the game mod blocks until it arrives.
+# Item -> capability tag the mod blocks.
 MOVEMENT_ITEMS: dict[str, ItemData] = {
     "Double Jump": ItemData(ITEM_ID_BASE + 100, ItemClassification.progression, "AirJump"),
     "Dash": ItemData(ITEM_ID_BASE + 101, ItemClassification.progression, "Dash"),
@@ -42,7 +42,7 @@ class Ability(NamedTuple):
     owner: str = ""
 
 
-# Each area's abilities, one item per character. Must match Abilities in main.lua.
+# Area abilities. Must match main.lua.
 ABILITIES: dict[str, Ability] = {
     "Shed May Ability": Ability(ITEM_ID_BASE + 420, ("HammerWeapon", "HammerSmash", "WeaponHammer")),  # Hammer
     "Shed Cody Ability": Ability(ITEM_ID_BASE + 421, ("NailWeapon",)),  # Nail Throw
@@ -63,9 +63,14 @@ ABILITY_ITEMS: dict[str, ItemData] = {
     name: ItemData(ability.id, ItemClassification.progression) for name, ability in ABILITIES.items()
 }
 
-FILLER_ITEM_NAME = "Clockwork Gear"
 FILLER_ITEMS: dict[str, ItemData] = {
-    FILLER_ITEM_NAME: ItemData(ITEM_ID_BASE + 200, ItemClassification.filler),
+    "Clockwork Gear": ItemData(ITEM_ID_BASE + 200, ItemClassification.filler),
+    "Paint Can": ItemData(ITEM_ID_BASE + 202, ItemClassification.filler),
+    "Moon Baboon Plushie": ItemData(ITEM_ID_BASE + 203, ItemClassification.filler),
+    "Cutie's Leg": ItemData(ITEM_ID_BASE + 204, ItemClassification.filler),
+    "Cutie's Ear": ItemData(ITEM_ID_BASE + 205, ItemClassification.filler),
+    "Snowball": ItemData(ITEM_ID_BASE + 206, ItemClassification.filler),
+    "Book of Love": ItemData(ITEM_ID_BASE + 207, ItemClassification.filler),
 }
 
 PAGE_ITEM_NAME = "Page"

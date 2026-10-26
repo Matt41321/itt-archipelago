@@ -7,7 +7,7 @@ from worlds.AutoWorld import World
 from worlds.LauncherComponents import Component, Type, components, launch_subprocess
 
 from .chapter_data import CHAPTERS
-from .items import (ABILITY_ITEMS, BASIC_MOVEMENT, CHAPTER_ITEMS, FILLER_ITEM_NAME, GAME_NAME, ITEM_GROUPS,
+from .items import (ABILITY_ITEMS, BASIC_MOVEMENT, CHAPTER_ITEMS, FILLER_ITEMS, GAME_NAME, ITEM_GROUPS,
                     ITEM_NAME_TO_ID, ITEM_TABLE, MOVEMENT_ITEMS, PAGE_ITEM_NAME, ItTakesTwoItem)
 from .locations import (CHECKPOINT_LOCATIONS, COMPLETION_LOCATIONS, DISCOVERY_LOCATIONS, FINAL_CHAPTER,
                         LOCATION_GROUPS, LOCATION_NAME_TO_ID, MINIGAME_EVENT, MINIGAMES, STORY_CHAPTERS, VICTORY_EVENT,
@@ -68,7 +68,7 @@ class ItTakesTwoWorld(World):
             self.page_count = self.pages_required = 0
             return
 
-        # Pages unlock the finale. There can't be more Pages than free locations.
+        # Pages can't outnumber free locations.
         locations = len(COMPLETION_LOCATIONS) + len(DISCOVERY_LOCATIONS)
         if self.options.checkpoint_sanity:
             locations += len(CHECKPOINT_LOCATIONS)
@@ -80,7 +80,7 @@ class ItTakesTwoWorld(World):
         self.pages_required = max(1, math.ceil(self.page_count * self.options.page_percentage.value / 100))
 
     def pool_item_names(self) -> list[str]:
-        """Every item that goes in the pool apart from Pages and filler."""
+        """Pool items except Pages and filler."""
         return [name for name in [*CHAPTER_ITEMS, *MOVEMENT_ITEMS, *ABILITY_ITEMS]
                 if name not in (*self.start_chapters, FINAL_CHAPTER) and name not in self.starting_movement]
 
@@ -131,7 +131,7 @@ class ItTakesTwoWorld(World):
                 region.locations.append(event)
 
     def combination_rule(self, combinations: list[tuple[str, ...]]):
-        """Any one of these item combinations is enough."""
+        """Any one combination is enough."""
         if any(not needed for needed in combinations):
             return None
         return lambda state: any(state.has_all(needed, self.player) for needed in combinations)
@@ -145,14 +145,14 @@ class ItTakesTwoWorld(World):
         pool += [self.create_item(PAGE_ITEM_NAME) for _ in range(self.page_count)]
 
         unfilled = len(self.multiworld.get_unfilled_locations(self.player))
-        pool += [self.create_item(FILLER_ITEM_NAME) for _ in range(unfilled - len(pool))]
+        pool += [self.create_item(self.get_filler_item_name()) for _ in range(unfilled - len(pool))]
         self.multiworld.itempool += pool
 
     def set_rules(self) -> None:
         self.multiworld.completion_condition[self.player] = lambda state: state.has(VICTORY_EVENT, self.player)
 
     def get_filler_item_name(self) -> str:
-        return FILLER_ITEM_NAME
+        return self.random.choice(list(FILLER_ITEMS))
 
     def fill_slot_data(self) -> dict[str, Any]:
         return {

@@ -1,14 +1,15 @@
-"""Patches to It Takes Two's AngelScript files.
-"""
+"""Patches for It Takes Two's AngelScript files. New scripts are in new/."""
 import argparse
 import difflib
 import hashlib
 import re
+import shutil
 import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 PATCH_DIR = HERE / "patches"
+NEW_DIR = HERE / "new"
 DEFAULT_OUT = HERE / "patched"
 DEFAULT_GAME = Path(r"C:\Program Files (x86)\Steam\steamapps\common\ItTakesTwo")
 CONTEXT_LINES = 3
@@ -20,7 +21,7 @@ def sha256(data: bytes) -> str:
 
 
 def split(data: bytes) -> tuple[list[str], str, bool]:
-    """A script's lines without line endings, its line ending, and whether it ends with one."""
+    """Lines, line ending, and whether it ends with one."""
     text = data.decode("utf-8")
     newline = "\r\n" if "\r\n" in text else "\n"
     ends_with_newline = text.endswith(newline)
@@ -34,11 +35,16 @@ def create(vanilla_dir: Path, patched_dir: Path) -> None:
     PATCH_DIR.mkdir(exist_ok=True)
     for old in PATCH_DIR.glob("**/*.patch"):
         old.unlink()
+    shutil.rmtree(NEW_DIR, ignore_errors=True)
     for patched in sorted(patched_dir.rglob("*.as")):
         relative = patched.relative_to(patched_dir).as_posix()
         vanilla = vanilla_dir / relative
         if not vanilla.exists():
-            sys.exit(f"No vanilla copy of {relative} in {vanilla_dir}")
+            out = NEW_DIR / relative
+            out.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(patched, out)
+            print(f"Copied new script {out.relative_to(HERE)}")
+            continue
         vanilla_data, patched_data = vanilla.read_bytes(), patched.read_bytes()
         vanilla_lines, newline, _ = split(vanilla_data)
         patched_lines, patched_newline, ends_with_newline = split(patched_data)
@@ -126,7 +132,14 @@ def apply(game: Path, out: Path) -> None:
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(data)
         print(f"Patched {relative}")
-    print(f"Wrote {len(patches)} scripts to {out}")
+    new_scripts = sorted(NEW_DIR.rglob("*.as"))
+    for script in new_scripts:
+        relative = script.relative_to(NEW_DIR).as_posix()
+        target = out / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(script, target)
+        print(f"Added {relative}")
+    print(f"Wrote {len(patches) + len(new_scripts)} scripts to {out}")
 
 
 def main() -> None:
