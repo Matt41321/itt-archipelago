@@ -51,7 +51,7 @@ class StartingMovement(Choice):
 
 class StartingSubChapters(Choice):
     """Which sub-chapters you start with.
-    Random Sub-Chapter: one random sub-chapter you can complete with your starting movement.
+    Random Sub-Chapter: one random sub-chapter.
     First Of Each Chapter: the first sub-chapter of every chapter."""
     display_name = "Starting Sub-Chapters"
     option_random_sub_chapter = 0

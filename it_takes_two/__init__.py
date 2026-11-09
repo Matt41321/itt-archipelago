@@ -58,10 +58,10 @@ class ItTakesTwoWorld(World):
                 firsts.setdefault(chapter.group, chapter.name)
             self.start_chapters = list(firsts.values())
         else:
-            # Start with a random sub-chapter
             candidates = [chapter.name for chapter in STORY_CHAPTERS if chapter.name != FINAL_CHAPTER
-                          and completion_location_name(chapter) in reachable_nodes({*self.starting_movement,
-                                                                                    chapter.name})]
+                          and (self.options.checkpoint_sanity
+                               or completion_location_name(chapter) in reachable_nodes({*self.starting_movement,
+                                                                                        chapter.name}))]
             self.start_chapters = [self.random.choice(candidates)]
 
         if self.options.goal == Goal.option_minigames:
