@@ -1,5 +1,5 @@
 // Archipelago: mod version in the bottom left.
-const FString ARCHIPELAGO_MOD_VERSION = "0.1.2";
+const FString ARCHIPELAGO_MOD_VERSION = "0.1.3";
 
 class UArchipelagoVersionWidget : UHazeUserWidget
 {

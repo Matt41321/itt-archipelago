@@ -7,7 +7,7 @@ using System.Reflection;
 using Microsoft.Win32;
 
 const string ModPrefix = "ArchipelagoITT";
-const string ModName = ModPrefix + "v0.1.2";
+const string ModName = ModPrefix + "v0.1.3";
 const string BackupSuffix = ".ap-backup";  // left by older versions
 
 Console.Title = "It Takes Two Archipelago mod installer";

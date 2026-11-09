@@ -539,6 +539,7 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
         ('Fresh Air - Cutscene', ('Swinging', 'Wall Jump')),
         ('Fresh Air - Cutscene', ('Dash', 'Double Jump', 'Ground Pound', 'Slide')),
         ('Fresh Air - Cutscene', ('Dash', 'Double Jump', 'Slide', 'Swinging')),
+        ('Fresh Air - Cutscene', ('Dash', 'Double Jump', 'Swinging')),
     ],
     'Captured - Cutscene': [
         (None, ()),
@@ -551,62 +552,56 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
         ('Captured - Checkpoint 1', ('Double Jump', 'Tree Cody Ability', 'Tree May Ability')),
     ],
     'Captured - Checkpoint 3': [
-        ('Captured - Checkpoint 2', ('Dash', 'Double Jump', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Captured - Checkpoint 2', ('Ground Pound', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Captured - Checkpoint 2', ('Double Jump', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
+        ('Captured - Checkpoint 2', ('Tree Cody Ability', 'Tree May Ability')),
+        ('Captured - Checkpoint 2', ('Dash', 'Double Jump')),
     ],
     'Captured - Checkpoint 4': [
-        ('Captured - Checkpoint 3', ('Dash', 'Double Jump', 'Tree Cody Ability', 'Tree May Ability')),
+        ('Captured - Checkpoint 3', ('Dash', 'Slide', 'Tree Cody Ability', 'Tree May Ability')),
+        ('Captured - Checkpoint 3', ('Sprint', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
         ('Captured - Checkpoint 3', ('Ground Pound', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
         ('Captured - Checkpoint 3', ('Double Jump', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
+        ('Captured - Checkpoint 3', ('Dash', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
+        ('Captured - Checkpoint 3', ('Double Jump', 'Slide', 'Tree Cody Ability', 'Wall Jump')),
+        ('Captured - Checkpoint 3', ('Dash', 'Double Jump', 'Tree Cody Ability', 'Tree May Ability')),
     ],
     'Captured - Checkpoint 5': [
-        ('Captured - Checkpoint 4', ('Dash', 'Double Jump', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Captured - Checkpoint 4', ('Ground Pound', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Captured - Checkpoint 4', ('Double Jump', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
+        ('Captured - Checkpoint 4', ('Tree Cody Ability', 'Tree May Ability')),
+        ('Captured - Checkpoint 4', ('Double Jump', 'Tree Cody Ability', 'Wall Jump')),
+        ('Captured - Checkpoint 4', ('Dash', 'Tree Cody Ability', 'Wall Jump')),
     ],
     'Captured - Checkpoint 6': [
-        ('Captured - Checkpoint 5', ('Dash', 'Double Jump', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Captured - Checkpoint 5', ('Ground Pound', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Captured - Checkpoint 5', ('Double Jump', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
+        ('Captured - Checkpoint 5', ('Tree Cody Ability', 'Tree May Ability')),
     ],
     'Captured - Checkpoint 7': [
-        ('Captured - Checkpoint 6', ('Dash', 'Double Jump', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Captured - Checkpoint 6', ('Ground Pound', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Captured - Checkpoint 6', ('Double Jump', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
+        ('Captured - Checkpoint 6', ('Tree Cody Ability', 'Tree May Ability')),
+        ('Captured - Checkpoint 6', ('Dash', 'Double Jump')),
+        ('Captured - Checkpoint 6', ('Double Jump', 'Slide', 'Sprint')),
     ],
     'Captured - Checkpoint 8': [
-        ('Captured - Checkpoint 7', ('Dash', 'Double Jump', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Captured - Checkpoint 7', ('Ground Pound', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Captured - Checkpoint 7', ('Double Jump', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
+        ('Captured - Checkpoint 7', ('Wall Jump',)),
+        ('Captured - Checkpoint 7', ('Double Jump',)),
+        ('Captured - Checkpoint 7', ('Dash',)),
     ],
     'Captured - Checkpoint 9': [
-        ('Captured - Checkpoint 8', ('Dash', 'Double Jump', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Captured - Checkpoint 8', ('Grinding', 'Ground Pound', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Captured - Checkpoint 8', ('Double Jump', 'Grinding', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
+        ('Captured - Checkpoint 8', ('Tree Cody Ability', 'Tree May Ability')),
+        ('Captured - Checkpoint 8', ('Dash', 'Ground Pound')),
+        ('Captured - Checkpoint 8', ('Dash', 'Double Jump')),
     ],
     'Captured - Checkpoint 10': [
-        ('Captured - Checkpoint 9', ('Dash', 'Double Jump', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Captured - Checkpoint 9', ('Grinding', 'Ground Pound', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Captured - Checkpoint 9', ('Double Jump', 'Grinding', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
+        ('Captured - Checkpoint 9', ('Dash', 'Grinding')),
+        ('Captured - Checkpoint 9', ('Grinding', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
+        ('Captured - Checkpoint 9', ('Double Jump', 'Grinding', 'Slide', 'Swinging')),
     ],
     'Captured - Boss Entry': [
-        ('Captured - Checkpoint 10', ('Dash', 'Double Jump', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Captured - Checkpoint 10', ('Grinding', 'Ground Pound', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Captured - Checkpoint 10', ('Double Jump', 'Grinding', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
+        ('Captured - Checkpoint 10', ('Tree Cody Ability',)),
     ],
     'Tug of War Discovered': [
-        ('Captured - Checkpoint 8', ('Dash', 'Double Jump', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Captured - Checkpoint 4', ('Dash', 'Double Jump', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Captured - Checkpoint 8', ('Ground Pound', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Captured - Checkpoint 4', ('Ground Pound', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Captured - Checkpoint 8', ('Double Jump', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Captured - Checkpoint 4', ('Double Jump', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
+        ('Captured - Checkpoint 8', ()),
+        ('Captured - Checkpoint 2', ()),
+        ('Captured - Checkpoint 2', ('Dash', 'Double Jump')),
     ],
     'Captured Complete': [
-        ('Captured - Boss Entry', ('Dash', 'Double Jump', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Captured - Boss Entry', ('Grinding', 'Ground Pound', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Captured - Boss Entry', ('Double Jump', 'Grinding', 'Swinging', 'Tree Cody Ability', 'Tree May Ability')),
+        ('Captured - Boss Entry', ('Tree Cody Ability', 'Tree May Ability')),
     ],
     'Deeply Rooted - Cutscene': [
         (None, ()),
@@ -615,53 +610,40 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
         ('Deeply Rooted - Cutscene', ()),
     ],
     'Deeply Rooted - Checkpoint 2': [
+        ('Deeply Rooted - Checkpoint 1', ('Dash', 'Double Jump')),
         ('Deeply Rooted - Checkpoint 1', ('Dash', 'Tree Cody Ability', 'Tree May Ability')),
         ('Deeply Rooted - Checkpoint 1', ('Double Jump', 'Tree Cody Ability', 'Tree May Ability')),
+        ('Deeply Rooted - Checkpoint 1', ('Swinging', 'Tree Cody Ability', 'Tree May Ability')),
         ('Deeply Rooted - Checkpoint 1', ('Double Jump', 'Ground Pound', 'Slide')),
-        ('Deeply Rooted - Checkpoint 1', ('Dash', 'Double Jump', 'Slide')),
     ],
     'Deeply Rooted - Checkpoint 3': [
-        ('Deeply Rooted - Checkpoint 2', ('Dash', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Deeply Rooted - Checkpoint 2', ('Double Jump', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Deeply Rooted - Checkpoint 2', ('Double Jump', 'Ground Pound', 'Slide')),
-        ('Deeply Rooted - Checkpoint 2', ('Dash', 'Double Jump', 'Slide')),
+        ('Deeply Rooted - Checkpoint 2', ('Double Jump',)),
+        ('Deeply Rooted - Checkpoint 2', ('Dash',)),
+        ('Deeply Rooted - Checkpoint 2', ('Ledge Grab', 'Slide', 'Sprint', 'Tree Cody Ability', 'Tree May Ability')),
     ],
     'Deeply Rooted - Checkpoint 4': [
-        ('Deeply Rooted - Checkpoint 3', ('Dash', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Deeply Rooted - Checkpoint 3', ('Double Jump', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Deeply Rooted - Checkpoint 3', ('Double Jump', 'Ground Pound', 'Slide', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Deeply Rooted - Checkpoint 3', ('Dash', 'Double Jump', 'Slide', 'Tree Cody Ability', 'Tree May Ability')),
+        ('Deeply Rooted - Checkpoint 3', ('Tree Cody Ability', 'Tree May Ability')),
     ],
     'Deeply Rooted - Checkpoint 5': [
-        ('Deeply Rooted - Checkpoint 4', ('Dash', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Deeply Rooted - Checkpoint 4', ('Double Jump', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Deeply Rooted - Checkpoint 4', ('Double Jump', 'Ground Pound', 'Slide', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Deeply Rooted - Checkpoint 4', ('Dash', 'Double Jump', 'Slide', 'Tree Cody Ability', 'Tree May Ability')),
+        ('Deeply Rooted - Checkpoint 4', ()),
     ],
     'Deeply Rooted - Checkpoint 6': [
-        ('Deeply Rooted - Checkpoint 5', ('Dash', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Deeply Rooted - Checkpoint 5', ('Double Jump', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Deeply Rooted - Checkpoint 5', ('Double Jump', 'Ground Pound', 'Slide', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Deeply Rooted - Checkpoint 5', ('Dash', 'Double Jump', 'Slide', 'Tree Cody Ability', 'Tree May Ability')),
+        ('Deeply Rooted - Checkpoint 5', ()),
     ],
     'Deeply Rooted - Checkpoint 7': [
-        ('Deeply Rooted - Checkpoint 6', ('Dash', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Deeply Rooted - Checkpoint 6', ('Double Jump', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Deeply Rooted - Checkpoint 6', ('Double Jump', 'Ground Pound', 'Slide', 'Tree Cody Ability', 'Tree May Ability')),
-        ('Deeply Rooted - Checkpoint 6', ('Dash', 'Double Jump', 'Slide', 'Tree Cody Ability', 'Tree May Ability')),
+        ('Deeply Rooted - Checkpoint 6', ()),
     ],
     'Deeply Rooted - Boat Cutscene': [
+        ('Deeply Rooted - Checkpoint 7', ()),
         ('Deeply Rooted - Cutscene', ('Tree Cody Ability', 'Tree May Ability')),
+        ('Deeply Rooted - Cutscene', ('Dash', 'Double Jump')),
         ('Deeply Rooted - Cutscene', ('Double Jump', 'Ground Pound', 'Slide')),
-        ('Deeply Rooted - Cutscene', ('Dash', 'Double Jump', 'Slide')),
     ],
     'Deeply Rooted - Checkpoint 8': [
-        ('Deeply Rooted - Boat Cutscene', ('Tree Cody Ability', 'Tree May Ability')),
-        ('Deeply Rooted - Boat Cutscene', ('Double Jump', 'Ground Pound', 'Slide')),
-        ('Deeply Rooted - Boat Cutscene', ('Dash', 'Double Jump', 'Slide')),
+        ('Deeply Rooted - Boat Cutscene', ()),
     ],
     'Deeply Rooted - Checkpoint 9': [
-        ('Deeply Rooted - Checkpoint 8', ('Tree Cody Ability', 'Tree May Ability')),
+        ('Deeply Rooted - Checkpoint 8', ('Tree Cody Ability',)),
     ],
     'Deeply Rooted - Checkpoint 10': [
         ('Deeply Rooted - Checkpoint 9', ('Tree Cody Ability', 'Tree May Ability')),
@@ -679,43 +661,45 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
         ('Deeply Rooted - Checkpoint 12', ('Tree Cody Ability', 'Tree May Ability')),
     ],
     'Deeply Rooted - Checkpoint 14': [
-        ('Deeply Rooted - Checkpoint 13', ('Tree Cody Ability', 'Tree May Ability')),
+        ('Deeply Rooted - Checkpoint 13', ()),
     ],
     'Deeply Rooted - Elevator Cutscene': [
-        ('Deeply Rooted - Checkpoint 14', ('Tree Cody Ability', 'Tree May Ability')),
+        ('Deeply Rooted - Checkpoint 14', ()),
     ],
     'Deeply Rooted - Checkpoint 15': [
-        ('Deeply Rooted - Elevator Cutscene', ('Tree Cody Ability', 'Tree May Ability')),
+        ('Deeply Rooted - Elevator Cutscene', ()),
     ],
     'Deeply Rooted - Checkpoint 16': [
-        ('Deeply Rooted - Checkpoint 15', ('Tree Cody Ability', 'Tree May Ability')),
+        ('Deeply Rooted - Checkpoint 15', ()),
     ],
     'Deeply Rooted - Checkpoint 17': [
+        ('Deeply Rooted - Checkpoint 16', ('Dash',)),
+        ('Deeply Rooted - Checkpoint 16', ('Double Jump',)),
         ('Deeply Rooted - Checkpoint 16', ('Tree Cody Ability', 'Tree May Ability')),
     ],
     'Deeply Rooted - Checkpoint 18': [
         ('Deeply Rooted - Checkpoint 17', ('Tree Cody Ability', 'Tree May Ability')),
     ],
     'Deeply Rooted - Checkpoint 19': [
-        ('Deeply Rooted - Checkpoint 18', ('Tree Cody Ability', 'Tree May Ability')),
+        ('Deeply Rooted - Checkpoint 18', ()),
     ],
     'Deeply Rooted - Checkpoint 20': [
-        ('Deeply Rooted - Checkpoint 19', ('Tree Cody Ability', 'Tree May Ability')),
+        ('Deeply Rooted - Checkpoint 19', ()),
     ],
     'Deeply Rooted - Checkpoint 21': [
-        ('Deeply Rooted - Checkpoint 20', ('Tree Cody Ability', 'Tree May Ability')),
+        ('Deeply Rooted - Checkpoint 20', ()),
     ],
     'Deeply Rooted - Checkpoint 22': [
-        ('Deeply Rooted - Checkpoint 21', ('Tree Cody Ability', 'Tree May Ability')),
+        ('Deeply Rooted - Checkpoint 21', ()),
     ],
     'Deeply Rooted - Checkpoint 23': [
-        ('Deeply Rooted - Checkpoint 22', ('Tree Cody Ability', 'Tree May Ability')),
+        ('Deeply Rooted - Checkpoint 22', ('Tree May Ability',)),
     ],
     'Plunger Dunger Discovered': [
-        ('Deeply Rooted - Checkpoint 8', ('Tree Cody Ability', 'Tree May Ability')),
+        ('Deeply Rooted - Checkpoint 8', ()),
     ],
     'Deeply Rooted Complete': [
-        ('Deeply Rooted - Checkpoint 23', ('Tree Cody Ability', 'Tree May Ability')),
+        ('Deeply Rooted - Checkpoint 23', ()),
     ],
     'Extermination - Cutscene': [
         (None, ()),
@@ -852,6 +836,7 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
     'Hopscotch - Checkpoint 8': [
         ('Hopscotch - Checkpoint 7', ('Ground Pound', 'Swinging')),
         ('Hopscotch - Checkpoint 7', ('Dash',)),
+        ('Hopscotch - Checkpoint 7', ('Double Jump', 'Slide', 'Sprint')),
     ],
     'Hopscotch - Checkpoint 9': [
         ('Hopscotch - Checkpoint 8', ()),
@@ -1036,41 +1021,35 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
         ('Gates of Time - Cutscene', ('Cuckoo Clock May Ability',)),
         ('Gates of Time - Cutscene', ('Dash', 'Double Jump')),
         ('Gates of Time - Cutscene', ('Dash', 'Ground Pound')),
+        ('Gates of Time - Cutscene', ('Double Jump', 'Slide')),
+        ('Gates of Time - Cutscene', ('Dash', 'Slide')),
     ],
     'Gates of Time - Checkpoint 1': [
-        ('Gates of Time - Town Cutscene', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Dash', 'Double Jump')),
-        ('Gates of Time - Town Cutscene', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Dash', 'Ground Pound')),
-        ('Gates of Time - Town Cutscene', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Grinding', 'Ground Pound', 'Swinging')),
+        ('Gates of Time - Town Cutscene', ('Cuckoo Clock Cody Ability', 'Ground Pound')),
     ],
     'Gates of Time - Forest Cutscene': [
-        ('Gates of Time - Checkpoint 1', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Dash', 'Double Jump')),
-        ('Gates of Time - Checkpoint 1', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Dash', 'Ground Pound')),
-        ('Gates of Time - Checkpoint 1', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Grinding', 'Ground Pound', 'Swinging')),
+        ('Gates of Time - Checkpoint 1', ()),
     ],
     'Gates of Time - Checkpoint 2': [
-        ('Gates of Time - Forest Cutscene', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Dash', 'Double Jump')),
-        ('Gates of Time - Forest Cutscene', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Dash', 'Ground Pound')),
-        ('Gates of Time - Forest Cutscene', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Grinding', 'Ground Pound', 'Swinging')),
+        ('Gates of Time - Forest Cutscene', ('Ground Pound',)),
+        ('Gates of Time - Forest Cutscene', ('Dash', 'Slide')),
+        ('Gates of Time - Forest Cutscene', ('Dash', 'Double Jump')),
+        ('Gates of Time - Forest Cutscene', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Swinging')),
     ],
     'Gates of Time - Checkpoint 3': [
-        ('Gates of Time - Checkpoint 2', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Dash', 'Double Jump', 'Swinging')),
-        ('Gates of Time - Checkpoint 2', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Dash', 'Ground Pound', 'Swinging')),
-        ('Gates of Time - Checkpoint 2', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Grinding', 'Ground Pound', 'Swinging')),
+        ('Gates of Time - Checkpoint 2', ('Ground Pound',)),
+        ('Gates of Time - Checkpoint 2', ('Dash', 'Slide')),
+        ('Gates of Time - Checkpoint 2', ('Dash', 'Double Jump')),
+        ('Gates of Time - Checkpoint 2', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Swinging')),
     ],
     'Bomb Run Discovered': [
-        ('Gates of Time - Town Cutscene', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Dash', 'Double Jump')),
-        ('Gates of Time - Town Cutscene', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Dash', 'Ground Pound')),
-        ('Gates of Time - Town Cutscene', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Grinding', 'Ground Pound', 'Swinging')),
+        ('Gates of Time - Town Cutscene', ()),
     ],
     'Horse Derby Discovered': [
-        ('Gates of Time - Town Cutscene', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Dash', 'Double Jump')),
-        ('Gates of Time - Town Cutscene', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Dash', 'Ground Pound')),
-        ('Gates of Time - Town Cutscene', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Grinding', 'Ground Pound', 'Swinging')),
+        ('Gates of Time - Town Cutscene', ()),
     ],
     'Gates of Time Complete': [
-        ('Gates of Time - Checkpoint 3', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Dash', 'Double Jump', 'Swinging')),
-        ('Gates of Time - Checkpoint 3', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Dash', 'Ground Pound', 'Swinging')),
-        ('Gates of Time - Checkpoint 3', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Grinding', 'Ground Pound', 'Swinging')),
+        ('Gates of Time - Checkpoint 3', ('Cuckoo Clock Cody Ability',)),
     ],
     'Clockworks - Cutscene': [
         (None, ()),
@@ -1079,35 +1058,46 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
         ('Clockworks - Cutscene', ('Cuckoo Clock May Ability',)),
     ],
     'Clockworks - Checkpoint 2': [
-        ('Clockworks - Checkpoint 1', ('Cuckoo Clock May Ability',)),
+        ('Clockworks - Checkpoint 1', ()),
     ],
     'Clockworks - Checkpoint 3': [
         ('Clockworks - Checkpoint 2', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Grinding')),
+        ('Clockworks - Checkpoint 2', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Double Jump')),
+        ('Clockworks - Checkpoint 2', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Dash')),
         ('Clockworks - Checkpoint 2', ('Cuckoo Clock May Ability', 'Dash', 'Grinding', 'Slide')),
+        ('Clockworks - Checkpoint 2', ('Cuckoo Clock May Ability', 'Double Jump', 'Grinding', 'Ground Pound', 'Ledge Grab', 'Slide')),
     ],
     'Clockworks - Checkpoint 4': [
         ('Clockworks - Checkpoint 3', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Grinding')),
+        ('Clockworks - Checkpoint 3', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Double Jump')),
+        ('Clockworks - Checkpoint 3', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Dash')),
+        ('Clockworks - Checkpoint 3', ('Cuckoo Clock May Ability', 'Dash', 'Grinding', 'Slide')),
+        ('Clockworks - Checkpoint 3', ('Cuckoo Clock May Ability', 'Double Jump', 'Grinding', 'Ground Pound', 'Ledge Grab', 'Slide')),
     ],
     'Clockworks - Checkpoint 5': [
-        ('Clockworks - Checkpoint 4', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Grinding')),
+        ('Clockworks - Checkpoint 4', ()),
     ],
     'Clockworks - Checkpoint 6': [
-        ('Clockworks - Checkpoint 5', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Grinding', 'Wall Jump')),
+        ('Clockworks - Checkpoint 5', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Swinging')),
+        ('Clockworks - Checkpoint 5', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Dash', 'Slide')),
+        ('Clockworks - Checkpoint 5', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Double Jump', 'Ground Pound', 'Slide')),
+        ('Clockworks - Checkpoint 2', ('Cuckoo Clock May Ability', 'Dash', 'Double Jump', 'Grinding', 'Slide')),
     ],
     'Clockworks - Checkpoint 7': [
-        ('Clockworks - Checkpoint 6', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Grinding', 'Wall Jump')),
+        ('Clockworks - Checkpoint 6', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Wall Jump')),
+        ('Clockworks - Checkpoint 6', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Double Jump', 'Slide')),
     ],
     'Clockworks - Checkpoint 8': [
-        ('Clockworks - Checkpoint 7', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Grinding', 'Swinging', 'Wall Jump')),
+        ('Clockworks - Checkpoint 7', ()),
     ],
     'Clockworks - Checkpoint 9': [
-        ('Clockworks - Checkpoint 8', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Grinding', 'Swinging', 'Wall Jump')),
+        ('Clockworks - Checkpoint 8', ('Grinding', 'Swinging')),
     ],
     'Clockworks - Checkpoint 10': [
-        ('Clockworks - Checkpoint 9', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Grinding', 'Swinging', 'Wall Jump')),
+        ('Clockworks - Checkpoint 9', ()),
     ],
     'Clockworks Complete': [
-        ('Clockworks - Checkpoint 10', ('Cuckoo Clock Cody Ability', 'Cuckoo Clock May Ability', 'Grinding', 'Swinging', 'Wall Jump')),
+        ('Clockworks - Checkpoint 10', ('Swinging',)),
     ],
     'A Blast from the Past - Entry': [
         (None, ()),
@@ -1128,13 +1118,13 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
         ('A Blast from the Past - Checkpoint 4', ('Cuckoo Clock Cody Ability',)),
     ],
     'A Blast from the Past - Checkpoint 6': [
-        ('A Blast from the Past - Checkpoint 5', ('Cuckoo Clock Cody Ability', 'Grinding')),
+        ('A Blast from the Past - Checkpoint 5', ('Cuckoo Clock Cody Ability',)),
     ],
     'A Blast from the Past - Checkpoint 7': [
         ('A Blast from the Past - Checkpoint 6', ('Cuckoo Clock Cody Ability', 'Grinding')),
     ],
     'A Blast from the Past Complete': [
-        ('A Blast from the Past - Checkpoint 7', ('Cuckoo Clock Cody Ability', 'Grinding')),
+        ('A Blast from the Past - Checkpoint 7', ()),
     ],
     'Warming Up - Entry': [
         (None, ()),
@@ -1269,23 +1259,23 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
     ],
     'Green Fingers - Checkpoint 2': [
         ('Green Fingers - Cutscene', ('Dash', 'Double Jump', 'Slide')),
-        ('Green Fingers - Checkpoint 1', ('Garden Cody Ability', 'Garden May Ability', 'Ground Pound')),
+        ('Green Fingers - Checkpoint 1', ('Garden May Ability', 'Ground Pound')),
     ],
     'Green Fingers - Checkpoint 3': [
-        ('Green Fingers - Cutscene', ('Dash', 'Double Jump', 'Slide')),
-        ('Green Fingers - Checkpoint 2', ('Garden Cody Ability', 'Garden May Ability', 'Grinding', 'Ground Pound', 'Swinging')),
-        ('Green Fingers - Checkpoint 2', ('Dash', 'Double Jump', 'Garden Cody Ability', 'Garden May Ability')),
-        ('Green Fingers - Checkpoint 2', ('Garden Cody Ability', 'Garden May Ability', 'Ground Pound')),
+        ('Green Fingers - Checkpoint 2', ('Dash',)),
+        ('Green Fingers - Checkpoint 2', ('Dash', 'Double Jump', 'Slide')),
+        ('Green Fingers - Checkpoint 2', ('Garden May Ability', 'Grinding', 'Ground Pound', 'Swinging')),
     ],
     'Green Fingers - Checkpoint 4': [
         ('Green Fingers - Checkpoint 3', ('Garden Cody Ability', 'Garden May Ability')),
+        ('Green Fingers - Cutscene', ('Dash', 'Double Jump', 'Garden Cody Ability', 'Garden May Ability', 'Slide')),
     ],
     'Green Fingers - Checkpoint 5': [
-        ('Green Fingers - Cutscene', ('Dash', 'Double Jump', 'Slide')),
         ('Green Fingers - Checkpoint 4', ('Garden Cody Ability', 'Garden May Ability')),
+        ('Green Fingers - Checkpoint 4', ('Dash', 'Double Jump')),
+        ('Green Fingers - Cutscene', ('Dash', 'Double Jump', 'Slide')),
     ],
     'Green Fingers Complete': [
-        ('Green Fingers - Cutscene', ('Dash', 'Double Jump', 'Slide')),
         ('Green Fingers - Checkpoint 5', ('Garden Cody Ability', 'Garden May Ability')),
     ],
     'Weed Whacking - Cutscene': [
@@ -1302,39 +1292,48 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
         ('Weed Whacking - Checkpoint 2', ('Garden Cody Ability', 'Garden May Ability')),
     ],
     'Weed Whacking - Checkpoint 4': [
-        ('Weed Whacking - Checkpoint 3', ('Garden Cody Ability', 'Garden May Ability', 'Ground Pound')),
+        ('Weed Whacking - Checkpoint 3', ()),
     ],
     'Weed Whacking - Checkpoint 5': [
         ('Weed Whacking - Checkpoint 4', ('Garden Cody Ability', 'Garden May Ability', 'Ground Pound')),
     ],
     'Weed Whacking - Checkpoint 6': [
-        ('Weed Whacking - Checkpoint 5', ('Garden Cody Ability', 'Garden May Ability', 'Ground Pound')),
+        ('Weed Whacking - Checkpoint 5', ('Garden Cody Ability', 'Garden May Ability')),
     ],
     'Weed Whacking - Checkpoint 7': [
-        ('Weed Whacking - Checkpoint 6', ('Garden Cody Ability', 'Garden May Ability', 'Ground Pound')),
+        ('Weed Whacking - Checkpoint 6', ()),
     ],
     'Weed Whacking - Checkpoint 8': [
-        ('Weed Whacking - Checkpoint 7', ('Garden Cody Ability', 'Garden May Ability', 'Ground Pound')),
+        ('Weed Whacking - Checkpoint 7', ('Garden Cody Ability', 'Garden May Ability')),
     ],
     'Weed Whacking - Checkpoint 9': [
-        ('Weed Whacking - Checkpoint 8', ('Garden Cody Ability', 'Garden May Ability', 'Ground Pound')),
+        ('Weed Whacking - Checkpoint 8', ('Garden Cody Ability', 'Garden May Ability')),
     ],
     'Weed Whacking - Checkpoint 10': [
-        ('Weed Whacking - Checkpoint 9', ('Garden Cody Ability', 'Garden May Ability', 'Ground Pound')),
+        ('Weed Whacking - Checkpoint 9', ('Garden Cody Ability', 'Garden May Ability')),
     ],
     'Weed Whacking - Checkpoint 11': [
-        ('Weed Whacking - Checkpoint 10', ('Garden Cody Ability', 'Garden May Ability', 'Grinding', 'Ground Pound')),
+        ('Weed Whacking - Checkpoint 10', ('Grinding',)),
+        ('Weed Whacking - Cutscene', ('Double Jump', 'Garden May Ability')),
+        ('Weed Whacking - Cutscene', ('Dash', 'Garden May Ability', 'Ground Pound')),
+        ('Weed Whacking - Cutscene', ('Dash', 'Garden May Ability', 'Slide')),
         ('Weed Whacking - Cutscene', ('Dash', 'Double Jump', 'Slide', 'Wall Jump')),
-        ('Weed Whacking - Checkpoint 10', ('Dash', 'Double Jump', 'Garden May Ability', 'Slide')),
-        ('Weed Whacking - Checkpoint 10', ('Garden May Ability', 'Ground Pound')),
     ],
     'Weed Whacking - Checkpoint 12': [
-        ('Weed Whacking - Checkpoint 11', ('Garden Cody Ability', 'Garden May Ability', 'Grinding', 'Ground Pound')),
-        ('Weed Whacking - Checkpoint 11', ('Dash', 'Double Jump', 'Garden Cody Ability', 'Garden May Ability', 'Slide')),
+        ('Weed Whacking - Checkpoint 11', ('Garden Cody Ability', 'Garden May Ability')),
     ],
     'Larva Basket Discovered': [
-        ('Weed Whacking - Checkpoint 1', ('Garden May Ability', 'Swinging')),
+        ('Weed Whacking - Cutscene', ('Swinging',)),
+        ('Weed Whacking - Checkpoint 1', ('Swinging',)),
+        ('Weed Whacking - Cutscene', ('Dash',)),
+        ('Weed Whacking - Checkpoint 1', ('Dash',)),
+        ('Weed Whacking - Cutscene', ('Double Jump', 'Garden May Ability')),
+        ('Weed Whacking - Cutscene', ('Slide', 'Sprint')),
+        ('Weed Whacking - Checkpoint 1', ('Slide', 'Sprint')),
+        ('Weed Whacking - Cutscene', ('Dash', 'Double Jump')),
+        ('Weed Whacking - Checkpoint 1', ('Dash', 'Double Jump')),
         ('Weed Whacking - Cutscene', ('Dash', 'Double Jump', 'Wall Jump')),
+        ('Weed Whacking - Cutscene', ('Dash', 'Garden May Ability', 'Ground Pound')),
     ],
     'Garden Swings Discovered': [
         ('Weed Whacking - Cutscene', ('Double Jump',)),
@@ -1342,10 +1341,10 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
         ('Weed Whacking - Cutscene', ('Wall Jump',)),
         ('Weed Whacking - Cutscene', ('Garden May Ability',)),
         ('Weed Whacking - Cutscene', ('Dash', 'Slide')),
+        ('Weed Whacking - Cutscene', ('Slide', 'Sprint')),
     ],
     'Weed Whacking Complete': [
-        ('Weed Whacking - Checkpoint 12', ('Garden Cody Ability', 'Garden May Ability', 'Grinding', 'Ground Pound')),
-        ('Weed Whacking - Checkpoint 12', ('Dash', 'Double Jump', 'Garden Cody Ability', 'Garden May Ability', 'Slide')),
+        ('Weed Whacking - Checkpoint 12', ('Garden Cody Ability', 'Garden May Ability')),
     ],
     'Trespassing - Cutscene': [
         (None, ()),
@@ -1367,12 +1366,11 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
         ('Trespassing - Checkpoint 4', ('Double Jump', 'Garden May Ability')),
     ],
     'Trespassing - Checkpoint 4': [
-        ('Trespassing - Checkpoint 3', ('Swinging',)),
         ('Trespassing - Checkpoint 3', ('Dash',)),
-        ('Trespassing - Checkpoint 3', ('Slide',)),
         ('Trespassing - Checkpoint 3', ('Double Jump',)),
         ('Trespassing - Cutscene', ('Dash', 'Garden May Ability')),
         ('Trespassing - Cutscene', ('Double Jump', 'Garden May Ability')),
+        ('Trespassing - Checkpoint 3', ('Garden May Ability', 'Swinging')),
         ('Trespassing - Cutscene', ('Dash', 'Double Jump', 'Slide')),
     ],
     'Trespassing - Checkpoint 5': [
@@ -1384,6 +1382,7 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
         ('Trespassing - Checkpoint 5', ('Garden Cody Ability', 'Garden May Ability', 'Ledge Grab')),
         ('Trespassing - Checkpoint 5', ('Garden Cody Ability', 'Garden May Ability', 'Ground Pound', 'Sprint')),
         ('Trespassing - Checkpoint 5', ('Garden Cody Ability', 'Garden May Ability', 'Wall Jump')),
+        ('Trespassing - Checkpoint 5', ('Garden Cody Ability', 'Garden May Ability', 'Slide', 'Sprint')),
     ],
     'Trespassing - Checkpoint 7': [
         ('Trespassing - Checkpoint 6', ()),
@@ -1401,14 +1400,13 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
         ('Trespassing - Cutscene', ('Dash', 'Double Jump', 'Slide')),
     ],
     'Trespassing - Checkpoint 10': [
+        ('Trespassing - Checkpoint 9', ('Swinging', 'Wall Jump')),
         ('Trespassing - Cutscene', ('Double Jump', 'Garden May Ability')),
         ('Trespassing - Cutscene', ('Dash', 'Garden May Ability')),
         ('Trespassing - Cutscene', ('Dash', 'Double Jump', 'Slide')),
     ],
     'Trespassing Complete': [
-        ('Trespassing - Cutscene', ('Double Jump', 'Garden May Ability')),
-        ('Trespassing - Cutscene', ('Dash', 'Garden May Ability')),
-        ('Trespassing - Cutscene', ('Dash', 'Double Jump', 'Slide')),
+        ('Trespassing - Checkpoint 10', ()),
     ],
     'Frog Pond - Cutscene': [
         (None, ()),
@@ -1444,9 +1442,9 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
         ('Frog Pond - Cutscene', ()),
     ],
     'Frog Pond Complete': [
-        ('Frog Pond - Cutscene', ('Double Jump', 'Garden May Ability', 'Ground Pound')),
-        ('Frog Pond - Cutscene', ('Dash', 'Garden May Ability', 'Ground Pound')),
-        ('Frog Pond - Cutscene', ('Garden May Ability', 'Ground Pound', 'Slide', 'Sprint')),
+        ('Frog Pond - Checkpoint 9', ('Double Jump', 'Garden May Ability', 'Ground Pound')),
+        ('Frog Pond - Checkpoint 9', ('Dash', 'Garden May Ability', 'Ground Pound')),
+        ('Frog Pond - Checkpoint 9', ('Garden May Ability', 'Ground Pound', 'Slide', 'Sprint')),
     ],
     'Affliction - Cutscene': [
         (None, ()),
@@ -1455,7 +1453,7 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
         ('Affliction - Cutscene', ('Garden Cody Ability', 'Garden May Ability', 'Ground Pound')),
     ],
     'Affliction - Joy Cutscene': [
-        ('Affliction - Checkpoint 1', ()),
+        ('Affliction - Checkpoint 1', ('Garden Cody Ability', 'Garden May Ability', 'Ground Pound')),
     ],
     'Affliction - Checkpoint 2': [
         ('Affliction - Joy Cutscene', ('Garden May Ability', 'Ground Pound')),
@@ -1530,6 +1528,7 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
     ],
     'Rehearsal - Checkpoint 8': [
         ('Rehearsal - Checkpoint 7', ('Attic Cody Ability', 'Attic May Ability')),
+        ('Rehearsal - Checkpoint 7', ('Attic Cody Ability', 'Ledge Grab', 'Slide')),
     ],
     'Rehearsal - Checkpoint 9': [
         ('Rehearsal - Checkpoint 8', ('Attic Cody Ability', 'Attic May Ability', 'Double Jump')),
@@ -1615,7 +1614,7 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
         ('Symphony - Checkpoint 5', ()),
     ],
     'Symphony Complete': [
-        ('Symphony - Checkpoint 5', ()),
+        ('Symphony - Checkpoint 5', ('Attic Cody Ability', 'Attic May Ability')),
         ('Track Runner Discovered', ()),
     ],
     'Turn Up - Cutscene': [
@@ -1645,6 +1644,7 @@ ENTRANCES: dict[str, list[tuple[str | None, tuple[str, ...]]]] = {
         ('Turn Up - Checkpoint 6', ()),
     ],
     'Turn Up Complete': [
-        ('Turn Up - Checkpoint 1', ('Attic Cody Ability', 'Dash')),
+        ('Track Runner Discovered', ('Attic Cody Ability', 'Dash')),
+        ('Turn Up - Checkpoint 7', ()),
     ],
 }
